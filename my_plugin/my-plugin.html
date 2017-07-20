@@ -1,0 +1,119 @@
+<!--
+@license
+Copyright 2017 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../tf-backend/tf-backend.html">
+<link rel="import" href="../tf-dashboard-common/dashboard-style.html">
+<link rel="import" href="../tf-dashboard-common/tf-dashboard-layout.html">
+<link rel="import" href="../tf-runs-selector/tf-runs-selector.html">
+
+<!--
+An example web component that shows up as the content for a TensorBoard tab.
+
+@element my-plugin
+-->
+<dom-module id="my-plugin">
+  <template>
+    <tf-dashboard-layout>
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <tf-runs-selector selected-runs="{{_selectedRuns}}">
+          </tf-runs-selector>
+        </div>
+      </div>
+      <div class="center">
+        <p>
+          Hello World.
+        <p>
+          The backend says the time is <span class="time">[[time]]</span>.
+      </div>
+    </tf-dashboard-layout>
+    <style include="dashboard-style"></style>
+    <style>
+      .time {
+        font-weight: bold;
+      }
+    </style>
+  </template>
+  <script>
+    import {RequestManager} from '../tf-backend/requestManager.js';
+    import {getRouter} from "../tf-backend/router.js";
+
+    Polymer({
+      is: 'my-plugin',
+      properties: {
+
+        /**
+         * Formatted string of current time.
+         */
+        time: {
+          type: String,
+          value: 'unknown',
+        },
+
+        /**
+         * Indicates if reload button in tf-tensorboard should be shaded out.
+         */
+        isReloadDisabled: {
+          type: Boolean,
+          value: false,
+          readOnly: true,
+        },
+
+        /**
+         * Request manager to communicate with Python code.
+         *
+         * @type {RequestManager}
+         */
+        _requestManager: {
+          type: Object,
+          value: () => new RequestManager(),
+        },
+
+        /**
+         * Array of run names currently checked by the user.
+         *
+         * This field is updated by tf-runs-selector automatically.
+         *
+         * @type {!Array<string>}
+         */
+        _selectedRuns: Array,
+      },
+
+      /**
+       * Initializes web component.
+       *
+       * @see https://www.polymer-project.org/1.0/docs/devguide/registering-elements#ready-method
+       */
+      ready() {
+        this.reload();
+      },
+
+      /**
+       * Reloads data displayed by this web component.
+       *
+       * This method is called by tf-tensorboard when the reload timer fires.
+       */
+      reload() {
+        const url = getRouter().pluginRoute('my-plugin', '/time');
+        this._requestManager.request(url).then(response => {
+          this.set('time', response['time']);
+        });
+      },
+    });
+  </script>
+</dom-module>
