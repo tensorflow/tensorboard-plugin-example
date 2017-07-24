@@ -5,13 +5,13 @@ load("@org_tensorflow_tensorboard//tensorboard/defs:zipper.bzl", "tensorboard_zi
 licenses(["notice"])  # Apache 2.0
 
 py_binary(
-    name = "tensorboard_x",
+    name = "greeter_tensorboard",
     srcs = ["main.py"],
     data = ["assets.zip"],
     main = "main.py",
     srcs_version = "PY2AND3",
     deps = [
-        "//my_plugin",
+        "//greeter_plugin",
         "@org_pocoo_werkzeug",
         "@org_tensorflow_tensorboard//tensorboard",
         "@org_tensorflow_tensorboard//tensorboard:util",
@@ -33,7 +33,7 @@ ts_web_library(
     srcs = ["index.html"],
     path = "/",
     deps = [
-        "//my_plugin:component",
+        "//greeter_plugin:greeter_dashboard",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_imports:webcomponentsjs",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_tensorboard",
         "@org_tensorflow_tensorboard//tensorboard/plugins/audio/tf_audio_dashboard",

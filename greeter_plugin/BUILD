@@ -19,8 +19,8 @@ load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
 licenses(["notice"])  # Apache 2.0
 
 py_library(
-    name = "my_plugin",
-    srcs = ["my_plugin.py"],
+    name = "greeter_plugin",
+    srcs = ["greeter_plugin.py"],
     srcs_version = "PY2AND3",
     deps = [
         "@org_pocoo_werkzeug",
@@ -31,14 +31,35 @@ py_library(
     ],
 )
 
+py_binary(
+    name = "greeter_demo",
+    srcs = ["greeter_demo.py"],
+    srcs_version = "PY2AND3",
+    deps = [":greeter_summary"]
+)
+
+py_library(
+    name = "greeter_summary",
+    srcs = ["greeter_summary.py"],
+    srcs_version = "PY2AND3",
+)
+
 ts_web_library(
-    name = "component",
-    srcs = ["my-plugin.html"],
-    path = "/my-plugin",
+    name = "greeter_dashboard",
+    srcs = ["greeter-dashboard.html", "greeter-card.html"],
+    path = "/greeter-plugin",
     deps = [
+        "@org_polymer_iron_icon//:org_polymer_iron_icon",
+        "@org_polymer_paper_icon_button//:org_polymer_paper_icon_button",
+        "@org_polymer_paper_input//:org_polymer_paper_input",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_backend",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_dashboard_common",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_color_scale",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_card_heading",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_paginated_view",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_categorization_utils",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_imports:polymer",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_imports:lodash",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_runs_selector",
     ],
 )
