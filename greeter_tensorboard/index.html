@@ -23,7 +23,7 @@ limitations under the License.
 <link rel="import" href="tf-tensorboard/style.html">
 
 <!-- Import dynamically loaded web components. -->
-<link rel="import" href="my-plugin/my-plugin.html">
+<link rel="import" href="greeter-plugin/greeter-plugin.html">
 <link rel="import" href="tf-audio-dashboard/tf-audio-dashboard.html">
 <link rel="import" href="tf-distribution-dashboard/tf-distribution-dashboard.html">
 <link rel="import" href="tf-graph-dashboard/tf-graph-dashboard.html">
@@ -37,7 +37,7 @@ limitations under the License.
 <!-- Tell tf-tensorboard what plugins exist. -->
 <script>
   const TENSORBOARD_PLUGINS = {
-    'my-plugin': 'my-plugin',
+    'greeter-plugin': 'greeter-plugin',
     'scalars': 'tf-scalar-dashboard',
     'images': 'tf-image-dashboard',
     'audio': 'tf-audio-dashboard',
@@ -52,4 +52,4 @@ limitations under the License.
 
 <link rel="import" href="tf-tensorboard/tf-tensorboard.html">
 <body>
-<tf-tensorboard use-hash title="TensorBoard-X"></tf-tensorboard>
+<tf-tensorboard use-hash title="My Greeter TensorBoard"></tf-tensorboard>

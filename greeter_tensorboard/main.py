@@ -33,7 +33,7 @@ from tensorboard.plugins.scalar import scalars_plugin
 from tensorboard.plugins.text import text_plugin
 import tensorflow as tf
 
-from my_plugin import my_plugin
+from greeter_plugin import greeter_plugin
 
 
 def get_assets_zip_provider():
@@ -45,9 +45,10 @@ def main(unused_argv=None):
   util.setup_logging()
   tb_app = tb_main.create_tb_app(
       assets_zip_provider=get_assets_zip_provider(),
+      # We use the standard TensorBoard plugins, plus our Greeter Plugin
       plugins=[
           core_plugin.CorePlugin,
-          my_plugin.MyPlugin,
+          greeter_plugin.GreeterPlugin,
           scalars_plugin.ScalarsPlugin,
           images_plugin.ImagesPlugin,
           audio_plugin.AudioPlugin,
@@ -61,7 +62,8 @@ def main(unused_argv=None):
   server, url = tb_main.make_simple_server(tb_app)
   logger = logging.getLogger('tensorflow' + util.LogHandler.EPHEMERAL)
   logger.setLevel(logging.INFO)
-  logger.info('TensorBoard-X (My Plugin) 0.1 at %s (CTRL+C to quit) ', url)
+  logger.info('Greeter TensorBoard from tensorflow/tensorboard-plugin-example ', 
+              '0.1 at %s (CTRL+C to quit) ', url)
   try:
     server.serve_forever()
   finally:
