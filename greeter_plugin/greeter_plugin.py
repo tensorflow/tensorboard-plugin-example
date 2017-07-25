@@ -91,6 +91,7 @@ class GreeterPlugin(base_plugin.TBPlugin):
     Returns:
       Whether this plugin is active.
     """
+
     all_runs = self._multiplexer.PluginRunToTagToContent(
         GreeterPlugin.plugin_name)
 
@@ -98,10 +99,10 @@ class GreeterPlugin(base_plugin.TBPlugin):
     # to the plugin.
     return bool(self._multiplexer and any(six.itervalues(all_runs)))
 
-  def _process_string_tensor_event(event):
+  def _process_string_tensor_event(self, event):
     """Convert a TensorEvent into a JSON-compatible response."""
     string_arr = tf.make_ndarray(event.tensor_proto)
-    text = string_arr.astype(numpy.dtype(str)).tostring()
+    text = string_arr.astype(np.dtype(str)).tostring()
     return {
         'wall_time': event.wall_time,
         'step': event.step,
@@ -123,6 +124,6 @@ class GreeterPlugin(base_plugin.TBPlugin):
     tensor_events = self._multiplexer.Tensors(run, tag)
 
     # We convert the tensor data to text.
-    response = [_process_string_tensor_event(ev) for
+    response = [self._process_string_tensor_event(ev) for
                 ev in tensor_events]
     return http_util.Respond(request, response, 'application/json')

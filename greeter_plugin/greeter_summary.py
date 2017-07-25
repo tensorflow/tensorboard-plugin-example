@@ -11,6 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# ==============================================================================
+"""Simple demo which greets several people."""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 """This module provides summaries for the Greeter plugin."""
 
@@ -44,14 +50,21 @@ def op(name,
   # the TensorBoard display clearer.
   if display_name is None:
     display_name = name
-    message = tf.string_join(['Hello, ', guest, '!'])
-    # Return a summary op that is properly configured.
-    return tf.summary.tensor_summary(
-      name,
-      message,
-      display_name=display_name,
-      summary_description=description,
-      collections=collections)
+
+
+  summary_metadata = tf.SummaryMetadata()
+  # We could put additional metadata other than the PLUGIN_NAME,
+  # but we don't need any metadata for this simple example.
+  summary_metadata.plugin_data.add(plugin_name=PLUGIN_NAME, content="")
+  message = tf.string_join(['Hello, ', guest, '!'])
+  # Return a summary op that is properly configured.
+  return tf.summary.tensor_summary(
+    name,
+    message,
+    display_name=display_name,
+    summary_metadata=summary_metadata,
+    summary_description=description,
+    collections=collections)
 
 
 def pb(tag, guest, display_name=None, description=None):

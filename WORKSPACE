@@ -1,4 +1,4 @@
-workspace(name = "io_github_jart_tensorboard_plugin_example")
+workspace(name = "io_github_tensorflow_tensorboard_plugin_example")
 
 ################################################################################
 # CLOSURE RULES - Build rules and libraries for JavaScript development
