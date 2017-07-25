@@ -61,7 +61,7 @@ class GreeterPlugin(base_plugin.TBPlugin):
     # content. We retrieve the keys of that dictionary to obtain a
     # list of tags associated with each run.
     response = {
-        run: tagToContent.keys()
+        run: list(tagToContent.keys())
              for (run, tagToContent) in all_runs.items()
     }
     return http_util.Respond(request, response, 'application/json')
@@ -91,7 +91,6 @@ class GreeterPlugin(base_plugin.TBPlugin):
     Returns:
       Whether this plugin is active.
     """
-
     all_runs = self._multiplexer.PluginRunToTagToContent(
         GreeterPlugin.plugin_name)
 

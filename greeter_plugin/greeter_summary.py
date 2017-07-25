@@ -59,12 +59,12 @@ def op(name,
   message = tf.string_join(['Hello, ', guest, '!'])
   # Return a summary op that is properly configured.
   return tf.summary.tensor_summary(
-    name,
-    message,
-    display_name=display_name,
-    summary_metadata=summary_metadata,
-    summary_description=description,
-    collections=collections)
+      name,
+      message,
+      display_name=display_name,
+      summary_metadata=summary_metadata,
+      summary_description=description,
+      collections=collections)
 
 
 def pb(tag, guest, display_name=None, description=None):
@@ -83,7 +83,9 @@ def pb(tag, guest, display_name=None, description=None):
 
   summary_metadata = tf.SummaryMetadata(display_name=display_name,
                                         summary_description=description)
-  metadata_content = '{}'  # We have no metadata to store.
+  # We have no metadata to store, but we do need to add a plugin_data entry
+  # so that we know this summary is associated with the greeter plugin.
+  metadata_content = '{}'
   summary_metadata.plugin_data.add(plugin_name=PLUGIN_NAME,
                                    content=metadata_content)
 

@@ -27,7 +27,6 @@ import greeter_summary
 LOGDIR = '/tmp/greeter_demo'
 
 
-
 def run(logdir, run_name, characters, extra_character):
   """Greet several characters from a given cartoon."""
 
@@ -42,8 +41,8 @@ def run(logdir, run_name, characters, extra_character):
   sess = tf.Session()
 
   for character in characters:
-  	summary = sess.run(summary_op, feed_dict={input_: character})
-  	writer.add_summary(summary)
+    summary = sess.run(summary_op, feed_dict={input_: character})
+    writer.add_summary(summary)
 
   # Demonstrate that we can also add summaries without using the 
   # TensorFlow session or graph.

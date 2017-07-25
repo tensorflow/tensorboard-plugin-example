@@ -69,7 +69,7 @@ limitations under the License.
         },
         _runColor: {
           type: String,
-          computed: '_computeRunColor(run)',
+          computed: "_computeRunColor(run)",
         },
         requestManager: Object,
         _canceller: {
@@ -78,13 +78,16 @@ limitations under the License.
         },
       },
 
-      observers: ['reload(run, tag)'],
+      observers: ["reload(run, tag)"],
 
       _computeRunColor(run) {
         return this._colorScaleFunction(run);
       },
 
       attached() {
+        // Defer reloading until after we're attached, because that ensures that
+        // the requestManager has been set from above. (Polymer is tricky
+        // sometimes)
         this._attached = true;
         this.reload();
       },
