@@ -37,7 +37,10 @@ limitations under the License.
 <!-- Tell tf-tensorboard what plugins exist. -->
 <script>
   const TENSORBOARD_PLUGINS = {
-    // the key needs to be the plugin_name
+    // This object provides the linkage from backend plugins to their
+    // corresponding dashboards. The key is the `plugin_name` from the
+    // backend, and the value is the name of the Polymer component on
+    // the frontend.
     'greeter': 'greeter-dashboard',
     'scalars': 'tf-scalar-dashboard',
     'images': 'tf-image-dashboard',

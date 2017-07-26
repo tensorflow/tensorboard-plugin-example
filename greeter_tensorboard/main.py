@@ -62,8 +62,10 @@ def main(unused_argv=None):
   server, url = tb_main.make_simple_server(tb_app)
   logger = logging.getLogger('tensorflow' + util.LogHandler.EPHEMERAL)
   logger.setLevel(logging.INFO)
-  logger.info('Greeter TensorBoard from tensorflow/tensorboard-plugin-example ', 
-              '0.1 at %s (CTRL+C to quit) ', url)
+
+  tensorboard_name = 'Greeter TensorBoard 0.1.0'
+
+  logger.info('%s at %s (CTRL+C to quit) ', tensorboard_name, url)
   try:
     server.serve_forever()
   finally:
