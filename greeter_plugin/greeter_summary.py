@@ -51,20 +51,22 @@ def op(name,
   if display_name is None:
     display_name = name
 
-
-  summary_metadata = tf.SummaryMetadata()
   # We could put additional metadata other than the PLUGIN_NAME,
   # but we don't need any metadata for this simple example.
-  summary_metadata.plugin_data.plugin_name = PLUGIN_NAME
-  summary_metadata.plugin_data.content = ""
+  summary_metadata = tf.SummaryMetadata(
+      display_name=display_name,
+      summary_description=description,
+      plugin_data=tf.SummaryMetadata.PluginData(
+          plugin_name=PLUGIN_NAME,
+          content=''))
+       
   message = tf.string_join(['Hello, ', guest, '!'])
+
   # Return a summary op that is properly configured.
   return tf.summary.tensor_summary(
       name,
       message,
-      display_name=display_name,
       summary_metadata=summary_metadata,
-      summary_description=description,
       collections=collections)
 
 
@@ -82,12 +84,15 @@ def pb(tag, guest, display_name=None, description=None):
   message = 'Hello, %s!' % guest
   tensor = tf.make_tensor_proto(message, dtype=tf.string)
 
-  summary_metadata = tf.SummaryMetadata(display_name=display_name,
-                                        summary_description=description)
   # We have no metadata to store, but we do need to add a plugin_data entry
   # so that we know this summary is associated with the greeter plugin.
-  summary_metadata.plugin_data.plugin_name = PLUGIN_NAME
-  summary_metadata.plugin_data.content = '{}'
+  metadata_content = '{}'
+  summary_metadata = tf.SummaryMetadata(
+      display_name=display_name,
+      summary_description=description,
+      plugin_data=tf.SummaryMetadata.PluginData(
+          plugin_name=PLUGIN_NAME,
+          content=metadata_content))
 
   summary = tf.Summary()
   summary.value.add(tag=tag,
