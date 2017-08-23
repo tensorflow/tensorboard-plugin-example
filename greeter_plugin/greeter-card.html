@@ -89,16 +89,16 @@ limitations under the License.
         // the requestManager has been set from above. (Polymer is tricky
         // sometimes)
         this._attached = true;
-        this.reload();
+        this.reload(this.run, this.tag);
       },
-      reload() {
+      reload(run, tag) {
         if (!this._attached) {
           return;
         }
         this._canceller.cancelAll();
         const router = getRouter();
         const url = router.pluginRunTagRoute("greeter", "/greetings")(
-          this.tag, this.run);
+          tag, run);
         const updateData = this._canceller.cancellable(result => {
           if (result.cancelled) {
             return;
