@@ -78,20 +78,22 @@ limitations under the License.
         },
       },
 
-      observers: ["reload(run, tag)"],
+      observers: ["_fetchNewData(run, tag)"],
 
       _computeRunColor(run) {
         return this._colorScaleFunction(run);
       },
-
       attached() {
         // Defer reloading until after we're attached, because that ensures that
         // the requestManager has been set from above. (Polymer is tricky
         // sometimes)
         this._attached = true;
-        this.reload(this.run, this.tag);
+        this.reload();
       },
-      reload(run, tag) {
+      reload() {
+        this._fetchNewData(this.run, this.tag);
+      },
+      _fetchNewData(run, tag) {
         if (!this._attached) {
           return;
         }
