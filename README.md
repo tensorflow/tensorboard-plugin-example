@@ -380,7 +380,7 @@ Basically, the way you integrate a new plugin is by creating a custom TensorBoar
   1. It needs to use its own [`main.py`](https://github.com/tensorflow/tensorboard-plugin-example/blob/greeter_tensorboard/main.py) file, which imports the standard TensorBoard plugins, and adds a new one on the backend.
   2. It needs to provide its own [`index.html`](https://github.com/tensorflow/tensorboard-plugin-example/blob/greeter_tensorboard/index.html) file, which imports the new TensorBoard plugin frontend, and registers it as a dashboard.
 
-If you want to really understand what’s going on with the integration, you’ll need to understand Bazel, our build system. You can read the [Bazel docs](https://bazel.build/) and also our compilation of [useful tips](https://github.com/tensorflow/tensorboard-plugin-example/blob/bazel_tips.md).
+If you want to really understand what’s going on with the integration, you’ll need to understand Bazel, our build system. You can read the [Bazel docs](https://bazel.build/) and also our compilation of [useful tips](bazel_tips.md).
 
 ## A note on naming
 
