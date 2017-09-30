@@ -11,19 +11,36 @@ We want to enable everyone in the TensorFlow community to add new dashboards and
 
 This repository is a live example of a simple custom TensorBoard, which implements standard TensorBoard features as well as a “Greeter plugin”. The Greeter plugin has a special “greeter summary” op that will greet, by name, any character the developer wants. It’s the “hello, world” of TensorBoard plugins.
 
-To test out the custom “greeter TensorBoard” with the Greeter Plugin, first [install Bazel] and [install TensorFlow].
+To test out the custom “greeter TensorBoard” with the Greeter Plugin, first [install Bazel] to be able to build
+the example.
 
-> **Note:** This example requires TensorFlow 1.3 to run. As of 2017-07-24, TensorFlow 1.3 isn’t out yet, which means you need to install one of TensorFlow’s cutting edge nightly binaries. You can find the nightly download urls [here](https://github.com/tensorflow/tensorflow/blob/master/README.md).
+This example requires Python 2.7 and the nightly build of TensorFlow to run, which means you need to install one
+of TensorFlow’s cutting edge nightly binaries. You can find the nightly download urls
+[here](https://github.com/tensorflow/tensorflow/blob/master/README.md). Moreover some other dependencies
+such as `grpcio` are needed. To make your life easier we encapsulated the dependencies in a [conda 
+environment](environment.yml). Simply [install conda] and you are ready to go.
 
-Then, clone and `cd` into this repository, and run the following commands:
+Clone and `cd` into this repository, and run the following commands:
+
+`conda env create -f environment2.yml`
+
+Activate the environment:
+
+`source activate tensorboard27`
+
+or on Windows
+
+`activate tensorboard27`
 
 ```sh
 bazel run //greeter_plugin:greeter_demo
 bazel run //greeter_tensorboard -- --logdir=/tmp/greeter_demo
 ```
 
+Open http://localhost:6006/ in your browser to see the example.
+
 [install Bazel]: https://bazel.build/versions/master/docs/install.html
-[install TensorFlow]: https://www.tensorflow.org/install/
+[install conda]: https://conda.io/miniconda.html
 
 
 ## Background
@@ -374,7 +391,7 @@ Next, we dive in with setting up a standard dashboard layout. Here is an overvie
 
 ## Integration
 
-Once you have a plugin (or, more realistically, as you are developing it), you will want to use it inside TensorBoard. To do that, we recommend you fork [this repository](https://github.com/tensorflow/tensorboard-plugin-example); it has everything set up for you. 
+Once you have a plugin (or, more realistically, as you are developing it), you will want to use it inside TensorBoard. To do that, we recommend you fork [this repository](https://github.com/tensorflow/tensorboard-plugin-example); it has everything set up for you.
 
 Basically, the way you integrate a new plugin is by creating a custom TensorBoard build. The custom build needs to change two things:
   1. It needs to use its own [`main.py`](https://github.com/tensorflow/tensorboard-plugin-example/blob/greeter_tensorboard/main.py) file, which imports the standard TensorBoard plugins, and adds a new one on the backend.
