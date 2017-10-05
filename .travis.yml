@@ -9,8 +9,14 @@ python:
 os:
   - linux
 
+branches:
+  only:
+    - master
+    - /^\d+\.\d+(\.\d+)?(-\S*)?$/
+
 env:
-  - NAME=my_plugin BAZEL=0.5.1 TF=NIGHTLY
+  - NAME=greeter_plugin BAZEL=0.5.4 TF=NIGHTLY
+  - NAME=greeter_tensorboard BAZEL=0.5.4 TF=NIGHTLY
 
 cache:
   directories:
@@ -32,11 +38,11 @@ before_install:
         ;;
       NIGHTLY)
         if [[ "${TRAVIS_PYTHON_VERSION}" == 2* ]]; then
-          NIGHTLY_URL='https://ci.tensorflow.org/view/Nightly/job/nightly-matrix-cpu/TF_BUILD_IS_OPT=OPT,TF_BUILD_IS_PIP=PIP,TF_BUILD_PYTHON_VERSION=PYTHON2,label=cpu-slave/lastSuccessfulBuild/artifact/pip_test/whl/tensorflow-1.2.1-cp27-none-linux_x86_64.whl'
+        NIGHTLY_URL='https://ci.tensorflow.org/view/Nightly/job/nightly-matrix-cpu/TF_BUILD_IS_OPT=OPT,TF_BUILD_IS_PIP=PIP,TF_BUILD_PYTHON_VERSION=PYTHON2,label=cpu-slave/lastSuccessfulBuild/artifact/pip_test/whl/tensorflow-1.head-cp27-none-linux_x86_64.whl'
         else
-          NIGHTLY_URL='https://ci.tensorflow.org/view/Nightly/job/nightly-matrix-cpu/TF_BUILD_IS_OPT=OPT,TF_BUILD_IS_PIP=PIP,TF_BUILD_PYTHON_VERSION=PYTHON3,label=cpu-slave/lastSuccessfulBuild/artifact/pip_test/whl/tensorflow-1.2.1-cp34-cp34m-linux_x86_64.whl'
+        NIGHTLY_URL='https://ci.tensorflow.org/view/Nightly/job/nightly-matrix-cpu/TF_BUILD_IS_OPT=OPT,TF_BUILD_IS_PIP=PIP,TF_BUILD_PYTHON_VERSION=PYTHON3,label=cpu-slave/lastSuccessfulBuild/artifact/pip_test/whl/tensorflow-1.head-cp34-cp34m-linux_x86_64.whl'
         fi
-        pip install "${NIGHTLY_URL}"
+        pip install -I "${NIGHTLY_URL}"
         ;;
       *)
         pip install tensorflow=="${TF}"
@@ -44,6 +50,8 @@ before_install:
     esac
 
   - pip install pylint
+  - pip install futures==3.1.1
+  - pip install grpcio==1.4.0
 
 script:
   - |
@@ -80,9 +88,9 @@ script:
   - |
     DIR=$(pwd)
     cd bazel-genfiles
-    find "${my_plugin}" -name \*.py -exec cp {} "${DIR}"/{} \;
+    find "${NAME}" -name \*.py -exec cp {} "${DIR}"/{} \;
     cd "${DIR}"
-    pylint my_plugin
+    pylint "${NAME}"
 
 before_cache:
   - |

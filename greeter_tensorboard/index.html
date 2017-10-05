@@ -22,38 +22,27 @@ limitations under the License.
 <script src="webcomponentsjs/webcomponents-lite.min.js"></script>
 <link rel="import" href="tf-tensorboard/style.html">
 
-<!-- Import dynamically loaded web components. -->
-<link rel="import" href="greeter-plugin/greeter-dashboard.html">
-<link rel="import" href="tf-audio-dashboard/tf-audio-dashboard.html">
-<link rel="import" href="tf-distribution-dashboard/tf-distribution-dashboard.html">
-<link rel="import" href="tf-graph-dashboard/tf-graph-dashboard.html">
-<link rel="import" href="tf-histogram-dashboard/tf-histogram-dashboard.html">
-<link rel="import" href="tf-image-dashboard/tf-image-dashboard.html">
-<link rel="import" href="tf-profile-dashboard/tf-profile-dashboard.html">
-<link rel="import" href="tf-scalar-dashboard/tf-scalar-dashboard.html">
-<link rel="import" href="tf-text-dashboard/tf-text-dashboard.html">
-<link rel="import" href="vz-projector/vz-projector-dashboard.html">
-
-<!-- Tell tf-tensorboard what plugins exist. -->
 <script>
-  const TENSORBOARD_PLUGINS = {
-    // This object provides the linkage from backend plugins to their
-    // corresponding dashboards. The key is the `plugin_name` from the
-    // backend, and the value is the name of the Polymer component on
-    // the frontend.
-    'greeter': 'greeter-dashboard',
-    'scalars': 'tf-scalar-dashboard',
-    'images': 'tf-image-dashboard',
-    'audio': 'tf-audio-dashboard',
-    'graphs': 'tf-graph-dashboard',
-    'distributions': 'tf-distribution-dashboard',
-    'histograms': 'tf-histogram-dashboard',
-    'projector': 'vz-projector-dashboard',
-    'text': 'tf-text-dashboard',
-    'profile': 'tf-profile-dashboard',
-  };
+  // It's required that Google Analytics be defined, or be faked an the
+  // following manner (which is the default behavior in the TensorBoard
+  // open source release.)
+  window['ga'] = function() {};
 </script>
 
+<!--
+  Load dashboards into UI for all first-party TensorBoard plugins.
+
+  Each dashboard calls the registerDashboard() function to tell
+  <tf-tensorboard> that it exists, so it can be loaded dynamically via
+  document.createElement().
+
+  Ordering matters. The order in which these lines appear determines the
+  ordering of tabs in TensorBoard's GUI.
+-->
+<link rel="import" href="greeter-plugin/greeter-dashboard.html">
+<link rel="import" href="tf-tensorboard/default-plugins.html">
+
+<!-- Now we load the TensorBoard UI. -->
 <link rel="import" href="tf-tensorboard/tf-tensorboard.html">
 <body>
 <tf-tensorboard use-hash title="My Greeter TensorBoard"></tf-tensorboard>

@@ -21,6 +21,7 @@ limitations under the License.
 <link rel="import" href="../tf-dashboard-common/dashboard-style.html">
 <link rel="import" href="../tf-dashboard-common/tf-dashboard-layout.html">
 <link rel="import" href="../tf-runs-selector/tf-runs-selector.html">
+<link rel="import" href="../tf-tensorboard/registry.html">
 <link rel="import" href="greeter-card.html">
 
 <!--
@@ -106,6 +107,8 @@ limitations under the License.
     import {getTags} from '../tf-backend/backend.js';
     import {getRouter} from '../tf-backend/router.js';
     import {categorizeRunTagCombinations} from '../tf-categorization-utils/categorizationUtils.js';
+    import {registerDashboard} from '../tf-tensorboard/registry.js';
+
     Polymer({
       is: "greeter-dashboard",
       properties: {
@@ -155,5 +158,11 @@ limitations under the License.
         return categorizeRunTagCombinations(runToTag, selectedRuns, tagFilter);
       },
     });
+
+    registerDashboard({
+      plugin: 'greeter',
+      elementName: 'greeter-dashboard',
+    });
+
   </script>
 </dom-module>

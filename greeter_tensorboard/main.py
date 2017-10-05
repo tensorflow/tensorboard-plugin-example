@@ -16,61 +16,16 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import logging
 import os
 
-from tensorboard import util
-from tensorboard import main as tb_main
-from tensorboard.plugins.audio import audio_plugin
-from tensorboard.plugins.core import core_plugin
-from tensorboard.plugins.distribution import distributions_plugin
-from tensorboard.plugins.graph import graphs_plugin
-from tensorboard.plugins.histogram import histograms_plugin
-from tensorboard.plugins.image import images_plugin
-from tensorboard.plugins.profile import profile_plugin
-from tensorboard.plugins.projector import projector_plugin
-from tensorboard.plugins.scalar import scalars_plugin
-from tensorboard.plugins.text import text_plugin
+from tensorboard import default
+from tensorboard import program
 import tensorflow as tf
 
 from greeter_plugin import greeter_plugin
 
 
-def get_assets_zip_provider():
-  path = os.path.join(tf.resource_loader.get_data_files_path(), 'assets.zip')
-  return lambda: open(path, 'rb')
-
-
-def main(unused_argv=None):
-  util.setup_logging()
-  tb_app = tb_main.create_tb_app(
-      assets_zip_provider=get_assets_zip_provider(),
-      # We use the standard TensorBoard plugins, plus our Greeter Plugin
-      plugins=[
-          core_plugin.CorePlugin,
-          greeter_plugin.GreeterPlugin,
-          scalars_plugin.ScalarsPlugin,
-          images_plugin.ImagesPlugin,
-          audio_plugin.AudioPlugin,
-          graphs_plugin.GraphsPlugin,
-          distributions_plugin.DistributionsPlugin,
-          histograms_plugin.HistogramsPlugin,
-          projector_plugin.ProjectorPlugin,
-          text_plugin.TextPlugin,
-          profile_plugin.ProfilePlugin,
-      ])
-  server, url = tb_main.make_simple_server(tb_app)
-  logger = logging.getLogger('tensorflow' + util.LogHandler.EPHEMERAL)
-  logger.setLevel(logging.INFO)
-
-  tensorboard_name = 'Greeter TensorBoard 0.1.0'
-
-  logger.info('%s at %s (CTRL+C to quit) ', tensorboard_name, url)
-  try:
-    server.serve_forever()
-  finally:
-    logger.info('')
-
-
 if __name__ == '__main__':
-  tf.app.run()
+  plugins = default.get_plugins() + [greeter_plugin.GreeterPlugin]
+  assets = os.path.join(tf.resource_loader.get_data_files_path(), 'assets.zip')
+  program.main(plugins, lambda: open(assets, 'rb'))
