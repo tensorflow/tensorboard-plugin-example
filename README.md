@@ -377,8 +377,8 @@ Next, we dive in with setting up a standard dashboard layout. Here is an overvie
 Once you have a plugin (or, more realistically, as you are developing it), you will want to use it inside TensorBoard. To do that, we recommend you fork [this repository](https://github.com/tensorflow/tensorboard-plugin-example); it has everything set up for you. 
 
 Basically, the way you integrate a new plugin is by creating a custom TensorBoard build. The custom build needs to change two things:
-  1. It needs to use its own [`main.py`](https://github.com/tensorflow/tensorboard-plugin-example/blob/greeter_tensorboard/main.py) file, which imports the standard TensorBoard plugins, and adds a new one on the backend.
-  2. It needs to provide its own [`index.html`](https://github.com/tensorflow/tensorboard-plugin-example/blob/greeter_tensorboard/index.html) file, which imports the new TensorBoard plugin frontend, and registers it as a dashboard.
+  1. It needs to use its own [`main.py`](greeter_tensorboard/main.py) file, which imports the standard TensorBoard plugins, and adds a new one on the backend.
+  2. It needs to provide its own [`index.html`](greeter_tensorboard/index.html) file, which imports the new TensorBoard plugin frontend, and registers it as a dashboard.
 
 If you want to really understand what’s going on with the integration, you’ll need to understand Bazel, our build system. You can read the [Bazel docs](https://bazel.build/) and also our compilation of [useful tips](bazel_tips.md).
 
