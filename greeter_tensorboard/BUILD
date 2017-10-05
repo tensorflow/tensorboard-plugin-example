@@ -13,18 +13,8 @@ py_binary(
     deps = [
         "//greeter_plugin",
         "@org_pocoo_werkzeug",
-        "@org_tensorflow_tensorboard//tensorboard",
-        "@org_tensorflow_tensorboard//tensorboard:util",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/audio:audio_plugin",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/core:core_plugin",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/distribution:distributions_plugin",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/graph:graphs_plugin",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/histogram:histograms_plugin",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/image:images_plugin",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/profile:profile_plugin",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/projector:projector_plugin",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/scalar:scalars_plugin",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/text:text_plugin",
+        "@org_tensorflow_tensorboard//tensorboard:default",
+        "@org_tensorflow_tensorboard//tensorboard:program",
     ],
 )
 
@@ -36,15 +26,7 @@ ts_web_library(
         "//greeter_plugin:greeter_dashboard",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_imports:webcomponentsjs",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_tensorboard",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/audio/tf_audio_dashboard",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/distribution/tf_distribution_dashboard",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/graph/tf_graph_dashboard",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/histogram/tf_histogram_dashboard",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/image/tf_image_dashboard",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/profile/tf_profile_dashboard",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/projector/vz_projector",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/scalar/tf_scalar_dashboard",
-        "@org_tensorflow_tensorboard//tensorboard/plugins/text/tf_text_dashboard",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_tensorboard:default_plugins",
     ],
 )
 

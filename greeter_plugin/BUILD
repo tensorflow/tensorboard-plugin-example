@@ -35,7 +35,7 @@ py_binary(
     name = "greeter_demo",
     srcs = ["greeter_demo.py"],
     srcs_version = "PY2AND3",
-    deps = [":greeter_summary"]
+    deps = [":greeter_summary"],
 )
 
 py_library(
@@ -46,20 +46,24 @@ py_library(
 
 ts_web_library(
     name = "greeter_dashboard",
-    srcs = ["greeter-dashboard.html", "greeter-card.html"],
+    srcs = [
+        "greeter-card.html",
+        "greeter-dashboard.html",
+    ],
     path = "/greeter-plugin",
     deps = [
         "@org_polymer_iron_icon//:org_polymer_iron_icon",
         "@org_polymer_paper_icon_button//:org_polymer_paper_icon_button",
         "@org_polymer_paper_input//:org_polymer_paper_input",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_backend",
-        "@org_tensorflow_tensorboard//tensorboard/components/tf_dashboard_common",
-        "@org_tensorflow_tensorboard//tensorboard/components/tf_color_scale",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_card_heading",
-        "@org_tensorflow_tensorboard//tensorboard/components/tf_paginated_view",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_categorization_utils",
-        "@org_tensorflow_tensorboard//tensorboard/components/tf_imports:polymer",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_color_scale",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_dashboard_common",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_imports:lodash",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_imports:polymer",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_paginated_view",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_runs_selector",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_tensorboard:registry",
     ],
 )
