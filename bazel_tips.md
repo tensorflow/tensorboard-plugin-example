@@ -53,7 +53,7 @@ the external repositories defined in the `WORKSPACE` file.
 
 ## Workspace Rules
 
-These are special kinds of build rules are intended for `WORKSPACE` files. They
+These are special kinds of build rules intended for `WORKSPACE` files. They
 can be used to download third party code and generate a synthetic `BUILD` file
 for their contents.
 
