@@ -62,7 +62,7 @@ class GreeterPlugin(base_plugin.TBPlugin):
     # list of tags associated with each run.
     response = {
         run: list(tagToContent.keys())
-             for (run, tagToContent) in all_runs.items()
+        for (run, tagToContent) in all_runs.items()
     }
     return http_util.Respond(request, response, 'application/json')
 
