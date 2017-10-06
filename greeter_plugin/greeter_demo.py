@@ -21,7 +21,8 @@ from __future__ import print_function
 import os.path
 
 import tensorflow as tf
-import greeter_summary
+
+from greeter_plugin import greeter_summary
 
 # Directory into which to write tensorboard data.
 LOGDIR = '/tmp/greeter_demo'
@@ -33,7 +34,7 @@ def run(logdir, run_name, characters, extra_character):
   tf.reset_default_graph()
 
   input_ = tf.placeholder(tf.string)
-  
+
   summary_op = greeter_summary.op("greetings", input_)
 
   writer = tf.summary.FileWriter(os.path.join(logdir, run_name))
@@ -44,26 +45,26 @@ def run(logdir, run_name, characters, extra_character):
     summary = sess.run(summary_op, feed_dict={input_: character})
     writer.add_summary(summary)
 
-  # Demonstrate that we can also add summaries without using the 
+  # Demonstrate that we can also add summaries without using the
   # TensorFlow session or graph.
   summary = greeter_summary.pb("greetings", extra_character)
   writer.add_summary(summary)
 
   writer.close()
-  
 
 
-def run_all(logdir, verbose=False):
+
+def run_all(logdir, unused_verbose=False):
   """Run the simulation for every logdir.
   """
   run(logdir, "steven_universe", ["Garnet", "Amethyst", "Pearl"], "Steven")
-  run(logdir, "futurama", ["Fry", "Bender", "Leela"], 
+  run(logdir, "futurama", ["Fry", "Bender", "Leela"],
       "Lrrr, ruler of the planet Omicron Persei 8")
 
 
 def main(unused_argv):
   print('Saving output to %s.' % LOGDIR)
-  run_all(LOGDIR, verbose=True)
+  run_all(LOGDIR, unused_verbose=True)
   print('Done. Output saved to %s.' % LOGDIR)
 
 

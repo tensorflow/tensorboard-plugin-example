@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Simple demo which greets several people."""
+"""Simple demo which greets several people.
+
+This module provides summaries for the Greeter plugin.
+"""
 
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-
-"""This module provides summaries for the Greeter plugin."""
 
 import tensorflow as tf
 
@@ -59,7 +60,7 @@ def op(name,
       plugin_data=tf.SummaryMetadata.PluginData(
           plugin_name=PLUGIN_NAME,
           content=''))
-       
+
   message = tf.string_join(['Hello, ', guest, '!'])
 
   # Return a summary op that is properly configured.
@@ -99,4 +100,3 @@ def pb(tag, guest, display_name=None, description=None):
                     metadata=summary_metadata,
                     tensor=tensor)
   return summary
-  
