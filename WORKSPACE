@@ -13,11 +13,11 @@ workspace(name = "io_github_tensorflow_tensorboard_plugin_example")
 
 http_archive(
     name = "io_bazel_rules_closure",
-    sha256 = "110fe68753413777944b473c25eed6368c4a0487cee23a7bac1b13cc49d3e257",
-    strip_prefix = "rules_closure-4af89ef1db659eb41f110df189b67d4cf14073e1",
+    sha256 = "6691c58a2cd30a86776dd9bb34898b041e37136f2dc7e24cadaeaf599c95c657",
+    strip_prefix = "rules_closure-08039ba8ca59f64248bb3b6ae016460fe9c9914f",
     urls = [
-        "http://mirror.bazel.build/github.com/bazelbuild/rules_closure/archive/4af89ef1db659eb41f110df189b67d4cf14073e1.tar.gz",
-        "https://github.com/bazelbuild/rules_closure/archive/4af89ef1db659eb41f110df189b67d4cf14073e1.tar.gz",  # 2017-08-28
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_closure/archive/08039ba8ca59f64248bb3b6ae016460fe9c9914f.tar.gz",
+        "https://github.com/bazelbuild/rules_closure/archive/08039ba8ca59f64248bb3b6ae016460fe9c9914f.tar.gz",  # 2018-01-16
     ],
 )
 
@@ -48,6 +48,18 @@ load("@io_bazel_rules_go//go:def.bzl", "go_repositories")
 # Inherit external repositories defined by Go Rules.
 go_repositories()
 
+# Needed as a transitive dependency of rules_webtesting below.
+http_archive(
+    name = "bazel_skylib",
+    sha256 = "bbccf674aa441c266df9894182d80de104cabd19be98be002f6d478aaa31574d",
+    strip_prefix = "bazel-skylib-2169ae1c374aab4a09aa90e65efe1a3aad4e279b",
+    urls = [
+        # TODO(jart): add to bazel mirror.
+        # "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/archive/2169ae1c374aab4a09aa90e65efe1a3aad4e279b.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/archive/2169ae1c374aab4a09aa90e65efe1a3aad4e279b.tar.gz", # 2018-01-12
+    ],
+)
+
 ################################################################################
 # WEBTESTING RULES - Build rules and libraries for Go development
 #
@@ -57,11 +69,12 @@ go_repositories()
 
 http_archive(
     name = "io_bazel_rules_webtesting",
-    sha256 = "4a34918cdb57b7c0976c1d6a9a7af1d657266b239c9c1066c87d6f9a4058bc7d",
-    strip_prefix = "rules_webtesting-a9f624ac542d2be75f6f0bdd255f108f2795924a",
+    sha256 = "a1264301424f2d920fca04f2d3c5ef5ca1be4f2bbf8c84ef38006e54aaf22753",
+    strip_prefix = "rules_webtesting-9f597bb7d1b40a63dc443d9ef7e931cfad4fb098",
     urls = [
-        "http://mirror.bazel.build/github.com/bazelbuild/rules_webtesting/archive/a9f624ac542d2be75f6f0bdd255f108f2795924a.tar.gz",  # 2017-09-11
-        "https://github.com/bazelbuild/rules_webtesting/archive/a9f624ac542d2be75f6f0bdd255f108f2795924a.tar.gz",
+        # TODO(jart): add to bazel mirror.
+        # "https://mirror.bazel.build/github.com/bazelbuild/rules_webtesting/archive/9f597bb7d1b40a63dc443d9ef7e931cfad4fb098.tar.gz",  # 2017-01-29
+        "https://github.com/bazelbuild/rules_webtesting/archive/9f597bb7d1b40a63dc443d9ef7e931cfad4fb098.tar.gz",
     ],
 )
 
@@ -90,11 +103,12 @@ web_test_repositories(
 
 http_archive(
     name = "org_tensorflow_tensorboard",
-    sha256 = "4f57a58463885ffcff5ac66e192c180a42526ef8dd822376518c15e23a65e918",
-    strip_prefix = "tensorboard-c2a83736477f53cac88d4bc45f55b6f22d3ceb62",
+    sha256 = "087242325ef3b91f1909e3fd3a873ad15e3c7703990ad8caab64736d9009bf62",
+    strip_prefix = "tensorboard-1.6.0",
     urls = [
-        "http://mirror.bazel.build/github.com/tensorflow/tensorboard/archive/c2a83736477f53cac88d4bc45f55b6f22d3ceb62.tar.gz",
-        "https://github.com/tensorflow/tensorboard/archive/c2a83736477f53cac88d4bc45f55b6f22d3ceb62.tar.gz",  # 2017-10-05
+        # TODO(jart): Add a bazel mirror.
+        "http://mirror.bazel.build/github.com/tensorflow/tensorboard/archive/1.6.0.tar.gz",
+        "https://github.com/tensorflow/tensorboard/archive/1.6.0.tar.gz",
     ],
 )
 
