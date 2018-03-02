@@ -22,7 +22,7 @@ import os.path
 
 import tensorflow as tf
 
-from greeter_plugin import greeter_summary
+import greeter_summary
 
 # Directory into which to write tensorboard data.
 LOGDIR = '/tmp/greeter_demo'
