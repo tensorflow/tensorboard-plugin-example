@@ -14,7 +14,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
+load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "tf_web_library")
 
 licenses(["notice"])  # Apache 2.0
 
@@ -44,7 +44,7 @@ py_library(
     srcs_version = "PY2AND3",
 )
 
-ts_web_library(
+tf_web_library(
     name = "greeter_dashboard",
     srcs = [
         "greeter-card.html",

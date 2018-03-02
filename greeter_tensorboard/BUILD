@@ -1,5 +1,5 @@
 load("@org_tensorflow_tensorboard//tensorboard/defs:vulcanize.bzl", "tensorboard_html_binary")
-load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")
+load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "tf_web_library")
 load("@org_tensorflow_tensorboard//tensorboard/defs:zipper.bzl", "tensorboard_zip_file")
 
 licenses(["notice"])  # Apache 2.0
@@ -18,7 +18,7 @@ py_binary(
     ],
 )
 
-ts_web_library(
+tf_web_library(
     name = "index",
     srcs = ["index.html"],
     path = "/",
