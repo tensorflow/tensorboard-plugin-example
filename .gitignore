@@ -1,1 +1,5 @@
 /bazel-*
+/.idea
+*.pyc
+*.egg-info/
+
