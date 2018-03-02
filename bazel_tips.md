@@ -47,7 +47,7 @@ the external repositories defined in the `WORKSPACE` file.
 - `load("@io_bazel_rules_webtesting//web:web.bzl", "browser")`
 - `load("@org_tensorflow_tensorboard//tensorboard/defs:protos.bzl", "tb_proto_library")`
 - `load("@org_tensorflow_tensorboard//tensorboard/defs:vulcanize.bzl", "tensorboard_html_binary")`
-- `load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "ts_web_library")`
+- `load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "tf_web_library")`
 - `load("@org_tensorflow_tensorboard//tensorboard/defs:zipper.bzl", "tensorboard_zip_file")`
 - `load("@protobuf//:protobuf.bzl", "py_proto_library")`
 
@@ -99,7 +99,7 @@ available redundant mirrors, per the `WORKSPACE` file definition.
 ### web_library() rules
 
 The following labels can be added to the `deps` list of `web_library`,
-`ts_web_library`, `tensorboard_html_binary`, and `tensorboard_zip_file` rules.
+`tf_web_library`, `tensorboard_html_binary`, and `tensorboard_zip_file` rules.
 
 - `@org_polymer_font_roboto`
 - `@org_polymer_iron_ajax`
