@@ -81,10 +81,10 @@ script:
   #     --local_resources=400,2,1.0
 
   - |
-    # DIR=$(pwd)
-    # cd bazel-genfiles
-    # find "${NAME}" -name \*.py -exec cp {} "${DIR}"/{} \;
-    # cd "${DIR}"
+    DIR=$(pwd)
+    cd bazel-genfiles
+    find "${NAME}" -name \*.py -exec cp {} "${DIR}"/{} \;
+    cd "${DIR}"
     pylint "${NAME}"
 
 before_cache:
