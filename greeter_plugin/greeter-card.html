@@ -94,9 +94,8 @@ limitations under the License.
           return;
         }
         this._canceller.cancelAll();
-        const router = tf_backend.getRouter();
-        const url = router.pluginRunTagRoute("greeter", "/greetings")(
-          tag, run);
+        const url = tf_backend.addParams(
+          tf_backend.getRouter().pluginRoute('greeter', '/greetings'), {tag, run});
         const updateData = this._canceller.cancellable(result => {
           if (result.cancelled) {
             return;
