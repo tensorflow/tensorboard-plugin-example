@@ -50,9 +50,6 @@ An example web component that shows up as the content for a TensorBoard tab.
     </style>
   </template>
   <script>
-    import {RequestManager} from '../tf-backend/requestManager.js';
-    import {getRouter} from "../tf-backend/router.js";
-
     Polymer({
       is: 'my-plugin',
       properties: {
@@ -81,7 +78,7 @@ An example web component that shows up as the content for a TensorBoard tab.
          */
         _requestManager: {
           type: Object,
-          value: () => new RequestManager(),
+          value: () => new tf_backend.RequestManager(),
         },
 
         /**
@@ -109,7 +106,7 @@ An example web component that shows up as the content for a TensorBoard tab.
        * This method is called by tf-tensorboard when the reload timer fires.
        */
       reload() {
-        const url = getRouter().pluginRoute('my-plugin', '/time');
+        const url = tf_backend.getRouter().pluginRoute('my-plugin', '/time');
         this._requestManager.request(url).then(response => {
           this.set('time', response['time']);
         });

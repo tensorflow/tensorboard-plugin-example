@@ -52,10 +52,6 @@ limitations under the License.
   <script>
     "use strict";
 
-    import {Canceller} from "../tf-backend/canceller.js";
-    import {getRouter} from "../tf-backend/router.js";
-    import {runsColorScale} from "../tf-color-scale/colorScale.js";
-
     Polymer({
       is: "greeter-card",
       properties: {
@@ -65,7 +61,7 @@ limitations under the License.
         /** @type {Function} */
         _colorScaleFunction: {
           type: Object,  // function: string => string
-          value: () => runsColorScale,
+          value: () => tf_color_scale.runsColorScale,
         },
         _runColor: {
           type: String,
@@ -74,7 +70,7 @@ limitations under the License.
         requestManager: Object,
         _canceller: {
           type: Object,
-          value: () => new Canceller(),
+          value: () => new tf_backend.Canceller(),
         },
       },
 
@@ -98,7 +94,7 @@ limitations under the License.
           return;
         }
         this._canceller.cancelAll();
-        const router = getRouter();
+        const router = tf_backend.getRouter();
         const url = router.pluginRunTagRoute("greeter", "/greetings")(
           tag, run);
         const updateData = this._canceller.cancellable(result => {
