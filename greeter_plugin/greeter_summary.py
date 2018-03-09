@@ -59,7 +59,7 @@ def op(name,
       summary_description=description,
       plugin_data=tf.SummaryMetadata.PluginData(
           plugin_name=PLUGIN_NAME,
-          content=''))
+          content=b''))
 
   message = tf.string_join(['Hello, ', guest, '!'])
 
@@ -93,7 +93,7 @@ def pb(tag, guest, display_name=None, description=None):
       summary_description=description,
       plugin_data=tf.SummaryMetadata.PluginData(
           plugin_name=PLUGIN_NAME,
-          content=metadata_content))
+          content=metadata_content.encode('utf-8')))
 
   summary = tf.Summary()
   summary.value.add(tag=tag,
