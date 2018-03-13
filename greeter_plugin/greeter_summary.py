@@ -52,14 +52,14 @@ def op(name,
   if display_name is None:
     display_name = name
 
-  # We could put additional metadata other than the PLUGIN_NAME,
-  # but we don't need any metadata for this simple example.
+  # We could pass additional metadata other than the PLUGIN_NAME within the
+  # plugin data by using the content parameter, but we don't need any metadata
+  # for this simple example.
   summary_metadata = tf.SummaryMetadata(
       display_name=display_name,
       summary_description=description,
       plugin_data=tf.SummaryMetadata.PluginData(
-          plugin_name=PLUGIN_NAME,
-          content=b''))
+          plugin_name=PLUGIN_NAME))
 
   message = tf.string_join(['Hello, ', guest, '!'])
 
@@ -87,13 +87,13 @@ def pb(tag, guest, display_name=None, description=None):
 
   # We have no metadata to store, but we do need to add a plugin_data entry
   # so that we know this summary is associated with the greeter plugin.
-  metadata_content = '{}'
+  # We could use this entry to pass additional metadata other than the
+  # PLUGIN_NAME by using the content parameter.
   summary_metadata = tf.SummaryMetadata(
       display_name=display_name,
       summary_description=description,
       plugin_data=tf.SummaryMetadata.PluginData(
-          plugin_name=PLUGIN_NAME,
-          content=metadata_content.encode('utf-8')))
+          plugin_name=PLUGIN_NAME))
 
   summary = tf.Summary()
   summary.value.add(tag=tag,
