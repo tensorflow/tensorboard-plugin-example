@@ -82,7 +82,7 @@ script:
 
   - |
     DIR=$(pwd)
-    cd bazel-bin
+    cd bazel-tensorboard-plugin-example
     find "${NAME}" -name \*.py -exec cp {} "${DIR}"/{} \;
     cd "${DIR}"
     pylint "${NAME}"
