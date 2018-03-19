@@ -22,7 +22,8 @@ import os.path
 
 import tensorflow as tf
 
-from greeter_plugin import greeter_summary
+# TODO(chihuahua): Figure out why pylint invalidates this import.
+import greeter_summary  # pylint: disable=import-error
 
 # Directory into which to write tensorboard data.
 LOGDIR = '/tmp/greeter_demo'
