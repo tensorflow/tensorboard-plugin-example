@@ -83,6 +83,7 @@ script:
   - |
     DIR=$(pwd)
     cd bazel-genfiles
+    ls
     find "${NAME}" -name \*.py -exec cp {} "${DIR}"/{} \;
     cd "${DIR}"
     pylint "${NAME}"
