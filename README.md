@@ -1,6 +1,6 @@
 # Developing a TensorBoard plugin
 
-<!-- This document was last reviewed on July 21, 2017. It should be
+<!-- This document was last reviewed on Nov 1, 2018. It should be
 reviewed occasionally to make sure it stays up-to-date. -->
 
 ## Overview
@@ -184,40 +184,39 @@ This happens because we can’t allow tags to collide. If tag collision happens,
 
 For examples of some more realistic plugins, check out the [scalar][scalar plugin backend] and [histogram][histogram plugin backend] plugins included with TensorBoard.
 
-[scalar plugin backend]: https://github.com/tensorflow/tensorboard/tree/c82300f188e4d2f4e1e2e029ce4019fd9e89a1e9/tensorboard/plugins/scalar/scalars_plugin.py
-[histogram plugin backend]:https://github.com/tensorflow/tensorboard/tree/c82300f188e4d2f4e1e2e029ce4019fd9e89a1e9/tensorboard/plugins/histogram/histograms_plugin.py
+[scalar plugin backend]: https://github.com/tensorflow/tensorboard/tree/master/tensorboard/plugins/scalar/scalars_plugin.py
+[histogram plugin backend]: https://github.com/tensorflow/tensorboard/tree/master/tensorboard/plugins/histogram/histograms_plugin.py
 
 Along with this module, you should include a demo module that generates representative data for your plugin, and which exercises all of your plugin’s features. This script serves multiple purposes. First, it’s useful for users of your plugin: they can inspect this script to see how to adapt it for their own uses. Second, it’s useful for you as you’re testing: you can always invoke this script to generate your test data. Third, you can use this in conjunction with your frontend unit tests: your demo script generates test data and your unit tests interact with your dashboard. Finally, by combining the demo scripts from various plugins, we can create a “mega-demo” that shows off all the features of TensorBoard.
 
 As inspiration, here are the [scalar plugin demo] and [histogram plugin demo] included with TensorBoard.
 
-[scalar plugin demo]: https://github.com/tensorflow/tensorboard/tree/c82300f188e4d2f4e1e2e029ce4019fd9e89a1e9/tensorboard/plugins/scalar/scalars_demo.py
-[histogram plugin demo]: https://github.com/tensorflow/tensorboard/tree/c82300f188e4d2f4e1e2e029ce4019fd9e89a1e9/tensorboard/plugins/histogram/histograms_demo.py
+[scalar plugin demo]: https://github.com/tensorflow/tensorboard/tree/master/tensorboard/plugins/scalar/scalars_demo.py
+[histogram plugin demo]: https://github.com/tensorflow/tensorboard/tree/master/tensorboard/plugins/histogram/histograms_demo.py
 
 
 ### Backend: How the plugin processes data, and sends it to the browser
 
-> **Note:** The backend APIs are under active development and might change. If you [create a GitHub issue] telling us that you’re working on a plugin, then we can proactively reach out and help you update your code when API changes occur.
+To provide routes (endpoints) for your plugin, create a subclass of [`BasePlugin`]. Your subclass must have a static `plugin_name` property, and you’ll need to implement the following methods:
 
-[create a GitHub issue]: https://github.com/tensorflow/tensorboard/issues/new
-
-To provide routes (endpoints) for your plugin, create a subclass of `BasePlugin`. Your subclass must have a static `plugin_name` property, and you’ll need to implement the following methods:
-
-  - `__init__`: Your plugin will be passed a [`TBContext`] when it is constructed. Among other things, this context exposes an *[event multiplexer]*, which is used to access the actual summary data. You’ll probably want to store this onto your plugin object for later use.
+  - `__init__`: Your plugin will be passed a [`TBContext`] when it is constructed. Among other things, this context exposes an *[`EventMultiplexer`]*, which is used to access the actual summary data. You’ll probably want to store this onto your plugin object for later use.
   - `is_active`: This should return whether the plugin is active (whether there exists relevant data for the plugin to process). TensorBoard will exclude inactive plugins from the main navigation bar.
-  - `get_plugin_apps`: This should return a dictionary mapping routes to WSGI applications.
+  - `get_plugin_apps`: This should return a route mapping to WSGI applications.
 
-Each entry in the result of `get_plugin_apps` should have its key a route name string, like `/tags`, and its value a WSGI application for handling that route. A WSGI application is just a Python function that handles HTTP traffic. The easiest way to create such a function is to use the `@werkzeug.wrappers.Request.application` decorator, which lets you write a simple function that takes a `Request` object and returns a `Response` object. (See below for an example.) You can consult the [WSGI spec] for more information.
+In addition to above, in case the plugin should expose options, you can implement `define_flags` and `fix_flags`.
 
-[`TBContext`]: https://github.com/tensorflow/tensorboard/blob/c82300f188e4d2f4e1e2e029ce4019fd9e89a1e9/tensorboard/plugins/base_plugin.py#L72
-[event multiplexer]: https://github.com/tensorflow/tensorboard/blob/c82300f188e4d2f4e1e2e029ce4019fd9e89a1e9/tensorboard/backend/event_processing/event_multiplexer.py
-[WSGI spec]: https://www.python.org/dev/peps/pep-3333/.
+Each entry in the result of `get_plugin_apps` should have its key a route name string, like `/tags`, and its value a function for handling that route annotated with the `@werkzeug.wrappers.Request.application` decorator, which lets you write a simple function that takes a `Request` object and returns a `Response` object (you can consult the [WSGI spec] for more information).
 
-To retrieve relevant data (tensors) read from summaries, the logic of your plugin’s route should call `PluginRunToTagToContent` with the `plugin_name`. This returns a dictionary mapping from run name to all of the tags that are associated with your plugin. The tag names themselves map to the `content` from the `PluginData` proto.
+[WSGI spec]: https://www.python.org/dev/peps/pep-3333/
+[`TBContext`]: https://github.com/tensorflow/tensorboard/blob/master/tensorboard/plugins/base_plugin.py#L77
+[`BasePlugin`]: https://github.com/tensorflow/tensorboard/blob/master/tensorboard/plugins/base_plugin.py
+[`EventMultiplexer`]: https://github.com/tensorflow/tensorboard/blob/master/tensorboard/backend/event_processing/event_multiplexer.py
 
-Subsequently, with knowledge of which tags are relevant, your plugin can retrieve the tensors relevant to each tag. Call the `Tensors` method of the multiplexer object to retrieve the tensors sampled by TensorBoard.
+To retrieve relevant data (tensors) read from summaries, the logic of your plugin’s route should call `PluginRunToTagToContent` in [`EventMultiplexer`] with the `plugin_name`. This returns a dictionary mapping from run name to all of the tags that are associated with your plugin. The tag names themselves map to the `content` from the `PluginData` proto.
 
-Below, `GreeterPlugin` demonstrates how a very basic plugin works. To peruse the code of a real plugin, see [`TextPlugin`](https://github.com/tensorflow/tensorboard/blob/c82300f188e4d2f4e1e2e029ce4019fd9e89a1e9/tensorboard/plugins/text/text_plugin.py) or any of the plugins within TensorBoard’s GitHub repository.
+Subsequently, with knowledge of which tags are relevant, your plugin can retrieve the tensors relevant to each tag. Call the `Tensors` method of the `multiplexer` object to retrieve the tensors sampled by TensorBoard.
+
+Below, `GreeterPlugin` demonstrates how a very basic plugin works. To peruse the code of a real plugin, see [`TextPlugin`](https://github.com/tensorflow/tensorboard/blob/master/tensorboard/plugins/text/text_plugin.py) or any of the plugins within TensorBoard’s GitHub repository.
 
 
 <!--ensure_synchronized_to:greeter_plugin.py-->
@@ -370,11 +369,11 @@ Next, we dive in with setting up a standard dashboard layout. Here is an overvie
 
 [`tensorboard/components`]: https://github.com/tensorflow/tensorboard/tree/master/tensorboard/components
 
-[scalar dashboard code]: https://github.com/tensorflow/tensorboard/tree/c82300f188e4d2f4e1e2e029ce4019fd9e89a1e9/tensorboard/plugins/scalar/tf_scalar_dashboard/tf-scalar-dashboard.html#L128
+[scalar dashboard code]: https://github.com/tensorflow/tensorboard/tree/master/tensorboard/plugins/scalar/tf_scalar_dashboard/tf-scalar-dashboard.html
 
 ## Integration
 
-Once you have a plugin (or, more realistically, as you are developing it), you will want to use it inside TensorBoard. To do that, we recommend you fork [this repository](https://github.com/tensorflow/tensorboard-plugin-example); it has everything set up for you. 
+Once you have a plugin (or, more realistically, as you are developing it), you will want to use it inside TensorBoard. To do that, we recommend you fork [this repository](https://github.com/tensorflow/tensorboard-plugin-example); it has everything set up for you.
 
 Basically, the way you integrate a new plugin is by creating a custom TensorBoard build. The custom build needs to change two things:
   1. It needs to use its own [`main.py`](greeter_tensorboard/main.py) file, which imports the standard TensorBoard plugins, and adds a new one on the backend.
