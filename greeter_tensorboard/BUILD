@@ -30,14 +30,30 @@ tf_web_library(
     ],
 )
 
-tensorboard_html_binary(
-    name = "index_bin",
-    input_path = "/index.html",
-    output_path = "/index.html",
-    deps = [":index"],
-)
+# TODO(stephanwlee): Either allow modular html binary or make the interactive
+# inference plugin's asset public. Otherwise, we cannot correctly compile a
+# using Closure compiler.
+# Interactive inference plugin does not work without the compilation.
+#
+# tensorboard_html_binary(
+#     name = "index_bin",
+#     # TODO(stephanwlee): removed with having modular html binaries.
+#     compile = True,
+#     input_path = "/index.html",
+#     output_path = "/index_bin.html",
+#     deps = [":index"],
+# )
+#
+# tf_web_library(
+#     name = "assets_lib",
+#     srcs = [
+#         ":index_bin.html",
+#         "@org_tensorflow_tensorboard//tensorboard/plugins/interactive_inference/tf_interactive_inference_dashboard:wit_assets",
+#     ],
+#     path = "/",
+# )
 
 tensorboard_zip_file(
     name = "assets",
-    deps = [":index_bin"],
+    deps = [":index"],
 )
