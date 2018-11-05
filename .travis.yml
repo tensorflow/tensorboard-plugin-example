@@ -4,7 +4,7 @@ sudo: required
 language: python
 python:
   - "2.7"
-  - "3.4"
+  - "3.6"
 
 os:
   - linux
@@ -15,77 +15,71 @@ branches:
     - /^\d+\.\d+(\.\d+)?(-\S*)?$/
 
 env:
-  - NAME=greeter_plugin BAZEL=0.9.0 TF=NIGHTLY
-  - NAME=greeter_tensorboard BAZEL=0.9.0 TF=NIGHTLY
+  - NAME=greeter_plugin BAZEL=0.13.0 TF=NIGHTLY
+  - NAME=greeter_tensorboard BAZEL=0.13.0 TF=NIGHTLY
 
 cache:
   directories:
     - $HOME/.bazel-output-base
 
 before_install:
-  - |
-    set -e
-    BAZEL_URL="https://github.com/bazelbuild/bazel/releases/download/${BAZEL}/bazel-${BAZEL}-installer-linux-x86_64.sh"
-    wget -t 3 -O install.sh "${BAZEL_URL}"
-    chmod +x install.sh
-    ./install.sh --user
-    rm -f install.sh
+  - wget -t 3 -O bazel https://mirror.bazel.build/github.com/bazelbuild/bazel/releases/download/${BAZEL}/bazel-${BAZEL}-linux-x86_64
+  - chmod +x bazel
+  - sudo mv bazel /usr/local/bin
 
+  # Storing build artifacts in this directory helps Travis cache them. This
+  # will sometimes cut latency in half, when we're lucky.
+  - echo "startup --output_base=${HOME}/.bazel-output-base" >>~/.bazelrc
+
+  # Travis Trusty Sudo GCE VMs have 2 cores and 7.5 GB RAM. These settings
+  # help Bazel go faster and not OOM the system.
+  - echo "startup --host_jvm_args=-Xms500m" >>~/.bazelrc
+  - echo "startup --host_jvm_args=-Xmx500m" >>~/.bazelrc
+  - echo "startup --host_jvm_args=-XX:-UseParallelGC" >>~/.bazelrc
+  - echo "build --local_resources=400,2,1.0" >>~/.bazelrc
+  - echo "build --worker_max_instances=2" >>~/.bazelrc
+
+  # This is the magic incantation for making protobuf build 2x faster.
+  - echo "build --distinct_host_configuration=false" >>~/.bazelrc
+
+  # Make Bazel as strict as possible, so TensorBoard will build correctly
+  # for users, regardless of their Bazel configuration.
+  - echo "build --worker_verbose" >>~/.bazelrc
+  - echo "build --worker_sandboxing" >>~/.bazelrc
+  - echo "build --spawn_strategy=sandboxed" >>~/.bazelrc
+  - echo "build --genrule_strategy=sandboxed" >>~/.bazelrc
+  - echo "test --test_verbose_timeout_warnings" >>~/.bazelrc
+
+  # It's helpful to see the errors on failure.
+  - echo "build --verbose_failures" >>~/.bazelrc
+  - echo "test --test_output=errors" >>~/.bazelrc
+
+install:
+  - pip install futures==3.1.1
+  - pip install grpcio==1.6.3
+  - pip install mock==2.0.0
   - |
+    # Install TensorFlow
     case "${TF}" in
       RELEASE)
-        pip install tensorflow
+        pip install -I tensorflow
         ;;
       NIGHTLY)
         pip install -I tf-nightly
         ;;
       *)
-        pip install tensorflow=="${TF}"
+        pip install -I tensorflow=="${TF}"
         ;;
     esac
 
-  - pip install pylint==1.8.1
-  - pip install futures==3.1.1
-  - pip install grpcio==1.4.0
-
 script:
   - |
-    bazel \
-      --output_base="${HOME}/.bazel-output-base" \
-      --batch \
-      --host_jvm_args=-Xmx500m \
-      --host_jvm_args=-Xms500m \
-      build \
-      "//${NAME}/..." \
-      --worker_verbose \
-      --verbose_failures \
-      --spawn_strategy=sandboxed \
-      --genrule_strategy=sandboxed \
-      --local_resources=400,2,1.0 \
-      --worker_max_instances=2 \
-      --strategy=Javac=worker \
-      --strategy=Closure=worker
+    bazel build "//${NAME}/..."
 
   # TODO(@jart): Uncomment when tests are added.
   # - |
-  #   bazel \
-  #     --output_base="${HOME}/.bazel-output-base" \
-  #     --batch \
-  #     --host_jvm_args=-Xmx500m \
-  #     --host_jvm_args=-Xms500m \
-  #     test \
-  #     "//${NAME}/..." \
-  #     --verbose_failures \
-  #     --test_output=errors \
-  #     --spawn_strategy=sandboxed \
-  #     --local_resources=400,2,1.0
+  #   bazel test "//${NAME}/..."
 
-  - |
-    DIR=$(pwd)
-    cd bazel-tensorboard-plugin-example
-    find "${NAME}" -name \*.py -exec cp {} "${DIR}"/{} \;
-    cd "${DIR}"
-    pylint "${NAME}"
 
 before_cache:
   - |
