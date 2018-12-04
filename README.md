@@ -13,7 +13,7 @@ This repository is a live example of a simple custom TensorBoard, which implemen
 
 To test out the custom “greeter TensorBoard” with the Greeter Plugin, first [install Bazel] and [install TensorFlow].
 
-> **Note:** This example requires TensorFlow 1.3 to run. As of 2017-07-24, TensorFlow 1.3 isn’t out yet, which means you need to install one of TensorFlow’s cutting edge nightly binaries. You can find the nightly download urls [here](https://github.com/tensorflow/tensorflow/blob/master/README.md).
+> **Note:** This example requires the latest TensorFlow version to run. As of December 3rd 2018, please use Bazel version 0.19.2 as 0.20.0 made some backwards incompatible change and their rules are not updated accordingly yet.
 
 Then, clone and `cd` into this repository, and run the following commands:
 
@@ -87,7 +87,13 @@ Here’s the code; we’ll explain it below:
 
 <!--ensure_synchronized_to:greeter_summary.py-->
 ```python
-"""This module provides summaries for the Greeter plugin."""
+"""Simple demo which greets several people.
+This module provides summaries for the Greeter plugin.
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import tensorflow as tf
 
@@ -101,7 +107,6 @@ def op(name,
        description=None,
        collections=None):
   """Create a TensorFlow summary op to greet the given guest.
-
   Arguments:
     name: A name for this summary operation.
     guest: A rank-0 string `Tensor`.
@@ -120,25 +125,27 @@ def op(name,
   if display_name is None:
     display_name = name
 
+  # We could pass additional metadata other than the PLUGIN_NAME within the
+  # plugin data by using the content parameter, but we don't need any metadata
+  # for this simple example.
+  summary_metadata = tf.SummaryMetadata(
+      display_name=display_name,
+      summary_description=description,
+      plugin_data=tf.SummaryMetadata.PluginData(
+          plugin_name=PLUGIN_NAME))
 
-  summary_metadata = tf.SummaryMetadata()
-  # We could put additional metadata other than the PLUGIN_NAME,
-  # but we don't need any metadata for this simple example.
-  summary_metadata.plugin_data.add(plugin_name=PLUGIN_NAME, content="")
   message = tf.string_join(['Hello, ', guest, '!'])
+
   # Return a summary op that is properly configured.
   return tf.summary.tensor_summary(
-    name,
-    message,
-    display_name=display_name,
-    summary_metadata=summary_metadata,
-    summary_description=description,
-    collections=collections)
+      name,
+      message,
+      summary_metadata=summary_metadata,
+      collections=collections)
 
 
 def pb(tag, guest, display_name=None, description=None):
   """Create a greeting summary for the given guest.
-
   Arguments:
     tag: The string tag associated with the summary.
     guest: The string name of the guest to greet.
@@ -150,17 +157,21 @@ def pb(tag, guest, display_name=None, description=None):
   message = 'Hello, %s!' % guest
   tensor = tf.make_tensor_proto(message, dtype=tf.string)
 
-  summary_metadata = tf.SummaryMetadata(display_name=display_name,
-                                        summary_description=description)
-  metadata_content = '{}'  # We have no metadata to store.
-  summary_metadata.plugin_data.add(plugin_name=PLUGIN_NAME,
-                                   content=metadata_content)
+  # We have no metadata to store, but we do need to add a plugin_data entry
+  # so that we know this summary is associated with the greeter plugin.
+  # We could use this entry to pass additional metadata other than the
+  # PLUGIN_NAME by using the content parameter.
+  summary_metadata = tf.SummaryMetadata(
+      display_name=display_name,
+      summary_description=description,
+      plugin_data=tf.SummaryMetadata.PluginData(
+          plugin_name=PLUGIN_NAME))
 
   summary = tf.Summary()
   summary.value.add(tag=tag,
                     metadata=summary_metadata,
                     tensor=tensor)
-  return summary
+return summary
 ```
 <!--end_ensure_synchronized_to:greeter_summary.py-->
 
