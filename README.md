@@ -13,7 +13,7 @@ This repository is a live example of a simple custom TensorBoard, which implemen
 
 To test out the custom “greeter TensorBoard” with the Greeter Plugin, first [install Bazel] and [install TensorFlow].
 
-> **Note:** This example requires TensorFlow 1.3 to run. Moreover, please use Bazel version 0.19.2 as 0.20.0 made some backwards incompatible change and their rules are not updated accordingly yet.
+> **Note:** This example requires the lastest TensorFlow to run. Moreover, as of 2018-12-03, please use Bazel version 0.19.2 as 0.20.0 made some backwards incompatible change and their rules are not updated accordingly yet.
 
 Then, clone and `cd` into this repository, and run the following commands:
 
