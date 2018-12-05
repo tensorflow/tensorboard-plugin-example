@@ -175,6 +175,7 @@ def pb(tag, guest, display_name=None, description=None):
                     metadata=summary_metadata,
                     tensor=tensor)
   return summary
+```
 <!--end_ensure_synchronized_to:greeter_summary.py-->
 
 The `op` and `pb` methods above are two different ways of creating the same data: `Summary` protobufs containing `"Hello, $guest"` as a string tensor, with a unique `tag`, and with the appropriate metadata.
