@@ -15,8 +15,10 @@ branches:
     - /^\d+\.\d+(\.\d+)?(-\S*)?$/
 
 env:
-  - NAME=greeter_plugin BAZEL=0.13.0 TF=NIGHTLY
-  - NAME=greeter_tensorboard BAZEL=0.13.0 TF=NIGHTLY
+  # Keep the BAZEL version in sync with one in
+  # https://github.com/tensorflow/tensorboard/blob/master/.travis.yml
+  - NAME=greeter_plugin BAZEL=0.16.1 TF=NIGHTLY
+  - NAME=greeter_tensorboard BAZEL=0.16.1 TF=NIGHTLY
 
 cache:
   directories:
