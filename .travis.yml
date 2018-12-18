@@ -15,8 +15,10 @@ branches:
     - /^\d+\.\d+(\.\d+)?(-\S*)?$/
 
 env:
-  - NAME=greeter_plugin BAZEL=0.13.0 TF=NIGHTLY
-  - NAME=greeter_tensorboard BAZEL=0.13.0 TF=NIGHTLY
+  # Keep the BAZEL version in sync with one in
+  # https://github.com/tensorflow/tensorboard/blob/master/.travis.yml
+  - NAME=greeter_plugin BAZEL=0.16.1 TF=NIGHTLY
+  - NAME=greeter_tensorboard BAZEL=0.16.1 TF=NIGHTLY
 
 cache:
   directories:
@@ -38,9 +40,6 @@ before_install:
   - echo "startup --host_jvm_args=-XX:-UseParallelGC" >>~/.bazelrc
   - echo "build --local_resources=400,2,1.0" >>~/.bazelrc
   - echo "build --worker_max_instances=2" >>~/.bazelrc
-
-  # This is the magic incantation for making protobuf build 2x faster.
-  - echo "build --distinct_host_configuration=false" >>~/.bazelrc
 
   # Make Bazel as strict as possible, so TensorBoard will build correctly
   # for users, regardless of their Bazel configuration.
