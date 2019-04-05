@@ -3,6 +3,9 @@
 <!-- This document was last reviewed on Nov 1, 2018. It should be
 reviewed occasionally to make sure it stays up-to-date. -->
 
+# Things to note
+There have been noticable regressions in bazel when building this repo such that versions above 0.20.0 (roughly) and below 0.16.1 (probably) will fail to build the plugin in the way which is shown below. I build this with bazel 0.19.1.
+
 ## Overview
 
 You know (and, we hope, love!) TensorBoard’s core features like the scalar dashboard, the graph explorer, and the embedding projector. However, in every TensorBoard user’s life, there comes a time when they want some cool new visualization that just…doesn’t exist yet. That’s what the TensorBoard plugin system is for.
