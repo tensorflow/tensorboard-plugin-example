@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Simple demo which greets several people.
-
-This module provides summaries for the Greeter plugin.
-"""
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -24,7 +19,7 @@ from __future__ import print_function
 import tensorflow as tf
 
 
-PLUGIN_NAME = 'greeter'
+PLUGIN_NAME = 'paramplot'
 
 
 def op(name,

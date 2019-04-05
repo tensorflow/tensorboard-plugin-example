@@ -23,7 +23,7 @@ import os.path
 import tensorflow as tf
 
 # TODO(chihuahua): Figure out why pylint invalidates this import.
-import greeter_summary  # pylint: disable=import-error
+import paramplot_summary  # pylint: disable=import-error
 
 # Directory into which to write tensorboard data.
 LOGDIR = '/tmp/greeter_demo'
@@ -36,7 +36,7 @@ def run(logdir, run_name, characters, extra_character):
 
   input_ = tf.placeholder(tf.string)
 
-  summary_op = greeter_summary.op("greetings", input_)
+  summary_op = paramplot_summary.op("salutations", input_)
 
   writer = tf.summary.FileWriter(os.path.join(logdir, run_name))
 
@@ -48,7 +48,7 @@ def run(logdir, run_name, characters, extra_character):
 
   # Demonstrate that we can also add summaries without using the
   # TensorFlow session or graph.
-  summary = greeter_summary.pb("greetings", extra_character)
+  summary = paramplot_summary.pb("greetings", extra_character)
   writer.add_summary(summary)
 
   writer.close()

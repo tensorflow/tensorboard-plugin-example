@@ -1,5 +1,1 @@
-/bazel-*
-/.idea
-*.pyc
-*.egg-info/
-
+ranjeevmenv

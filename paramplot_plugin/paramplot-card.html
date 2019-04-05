@@ -23,9 +23,9 @@ limitations under the License.
 <link rel="import" href="../tf-imports/lodash.html">
 
 <!--
-  greeter-card loads greeting data from the greeter_plugin backend, and renders it.
+  paramplot-card loads greeting data from the paramplot_plugin backend, and renders it.
 -->
-<dom-module id="greeter-card">
+<dom-module id="paramplot-card">
   <template>
     <tf-card-heading title="[[tag]]" color="[[_runColor]]">
       [[run]]
@@ -53,7 +53,7 @@ limitations under the License.
     "use strict";
 
     Polymer({
-      is: "greeter-card",
+      is: "paramplot-card",
       properties: {
         run: String,
         tag: String,
@@ -95,7 +95,7 @@ limitations under the License.
         }
         this._canceller.cancelAll();
         const url = tf_backend.addParams(
-          tf_backend.getRouter().pluginRoute('greeter', '/greetings'), {tag, run});
+          tf_backend.getRouter().pluginRoute('paramplot', '/greetings'), {tag, run});
         const updateData = this._canceller.cancellable(result => {
           if (result.cancelled) {
             return;
