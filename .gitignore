@@ -3,3 +3,4 @@ ranjeevmenv
 /.idea
 *.pyc
 *.egg-info/
+.vscode
