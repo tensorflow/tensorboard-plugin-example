@@ -23,11 +23,11 @@ PLUGIN_NAME = 'paramplot'
 
 
 def op(name,
-       guest,
+       value,
        display_name=None,
        description=None,
        collections=None):
-  """Create a TensorFlow summary op to greet the given guest.
+  """Create a TensorFlow summary op to record data associated with a particular the given guest.
 
   Arguments:
     name: A name for this summary operation.
@@ -56,42 +56,10 @@ def op(name,
       plugin_data=tf.SummaryMetadata.PluginData(
           plugin_name=PLUGIN_NAME))
 
-  message = tf.string_join(['Hello, ', guest, '!'])
-
   # Return a summary op that is properly configured.
   return tf.summary.tensor_summary(
       name,
-      message,
+      value,
       summary_metadata=summary_metadata,
       collections=collections)
 
-
-def pb(tag, guest, display_name=None, description=None):
-  """Create a greeting summary for the given guest.
-
-  Arguments:
-    tag: The string tag associated with the summary.
-    guest: The string name of the guest to greet.
-    display_name: If set, will be used as the display name in
-      TensorBoard. Defaults to `tag`.
-    description: A longform readable description of the summary data.
-      Markdown is supported.
-    """
-  message = 'Hello, %s!' % guest
-  tensor = tf.make_tensor_proto(message, dtype=tf.string)
-
-  # We have no metadata to store, but we do need to add a plugin_data entry
-  # so that we know this summary is associated with the greeter plugin.
-  # We could use this entry to pass additional metadata other than the
-  # PLUGIN_NAME by using the content parameter.
-  summary_metadata = tf.SummaryMetadata(
-      display_name=display_name,
-      summary_description=description,
-      plugin_data=tf.SummaryMetadata.PluginData(
-          plugin_name=PLUGIN_NAME))
-
-  summary = tf.Summary()
-  summary.value.add(tag=tag,
-                    metadata=summary_metadata,
-                    tensor=tensor)
-  return summary

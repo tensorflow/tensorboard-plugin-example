@@ -74,7 +74,7 @@ limitations under the License.
         },
       },
 
-      observers: ["_fetchNewData(run, tag)"],
+      observers: ["_fetchNewData(tag)"],
 
       _computeRunColor(run) {
         return this._colorScaleFunction(run);
@@ -87,21 +87,21 @@ limitations under the License.
         this.reload();
       },
       reload() {
-        this._fetchNewData(this.run, this.tag);
+        this._fetchNewData(this.tag);
       },
-      _fetchNewData(run, tag) {
+      _fetchNewData(tag) {
         if (!this._attached) {
           return;
         }
         this._canceller.cancelAll();
         const url = tf_backend.addParams(
-          tf_backend.getRouter().pluginRoute('paramplot', '/greetings'), {tag, run});
+          tf_backend.getRouter().pluginRoute('paramplot', '/paramdatabytag'), {tag});
         const updateData = this._canceller.cancellable(result => {
           if (result.cancelled) {
             return;
           }
           const backendData = result.value;
-          this.greetings = backendData;
+          this.paramDataForTagByRun = backendData;
         });
         this.requestManager.request(url).then(updateData);
       },
