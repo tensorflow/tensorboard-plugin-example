@@ -24,16 +24,16 @@ from werkzeug import wrappers
 from tensorboard.backend import http_util
 from tensorboard.plugins import base_plugin
 
-class GreeterPlugin(base_plugin.TBPlugin):
+class ParamPlotPlugin(base_plugin.TBPlugin):
   """A plugin that serves greetings recorded during model runs."""
 
   # This static property will also be included within routes (URL paths)
   # offered by this plugin. This property must uniquely identify this plugin
   # from all other plugins.
-  plugin_name = 'greeter'
+  plugin_name = 'paramplot'
 
   def __init__(self, context):
-    """Instantiates a GreeterPlugin.
+    """Instantiates a ParamPlotPlugin.
 
     Args:
       context: A base_plugin.TBContext instance. A magic container that
@@ -55,7 +55,7 @@ class GreeterPlugin(base_plugin.TBPlugin):
     # This is a dictionary mapping from run to (tag to string content).
     # To be clear, the values of the dictionary are dictionaries.
     all_runs = self._multiplexer.PluginRunToTagToContent(
-        GreeterPlugin.plugin_name)
+        ParamPlotPlugin.plugin_name)
 
     # tagToContent is itself a dictionary mapping tag name to string
     # content. We retrieve the keys of that dictionary to obtain a
@@ -92,7 +92,7 @@ class GreeterPlugin(base_plugin.TBPlugin):
       Whether this plugin is active.
     """
     all_runs = self._multiplexer.PluginRunToTagToContent(
-        GreeterPlugin.plugin_name)
+        ParamPlotPlugin.plugin_name)
 
     # The plugin is active if any of the runs has a tag relevant
     # to the plugin.

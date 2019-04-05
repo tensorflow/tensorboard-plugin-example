@@ -19,8 +19,8 @@ load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "tf_web_library")
 licenses(["notice"])  # Apache 2.0
 
 py_library(
-    name = "greeter_plugin",
-    srcs = ["greeter_plugin.py"],
+    name = "paramplot_plugin",
+    srcs = ["paramplot_plugin.py"],
     srcs_version = "PY2AND3",
     deps = [
         "@org_pocoo_werkzeug",
@@ -32,25 +32,25 @@ py_library(
 )
 
 py_binary(
-    name = "greeter_demo",
-    srcs = ["greeter_demo.py"],
+    name = "paramplot_demo",
+    srcs = ["paramplot_demo.py"],
     srcs_version = "PY2AND3",
-    deps = [":greeter_summary"],
+    deps = [":paramplot_summary"],
 )
 
 py_library(
-    name = "greeter_summary",
-    srcs = ["greeter_summary.py"],
+    name = "paramplot_summary",
+    srcs = ["paramplot_summary.py"],
     srcs_version = "PY2AND3",
 )
 
 tf_web_library(
-    name = "greeter_dashboard",
+    name = "paramplot_dashboard",
     srcs = [
-        "greeter-card.html",
-        "greeter-dashboard.html",
+        "paramplot-card.html",
+        "paramplot-dashboard.html",
     ],
-    path = "/greeter-plugin",
+    path = "/paramplot-plugin",
     deps = [
         "@org_polymer_iron_icon",
         "@org_polymer_paper_icon_button",
