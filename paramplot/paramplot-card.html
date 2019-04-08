@@ -20,6 +20,7 @@ limitations under the License.
 <link rel="import" href="../tf-backend/tf-backend.html">
 <link rel="import" href="../tf-card-heading/tf-card-heading.html">
 <link rel="import" href="../tf-color-scale/tf-color-scale.html">
+<link rel="import" href="../tf-line-chart-data-loader/tf-line-chart-data-loader.html">
 <link rel="import" href="../tf-imports/lodash.html">
 
 <!--
@@ -27,12 +28,22 @@ limitations under the License.
 -->
 <dom-module id="paramplot-card">
   <template>
-    <tf-card-heading title="[[tag]]" color="[[_runColor]]">
-      [[run]]
+    <tf-card-heading title="[[tag]]">
     </tf-card-heading>
-    <div>[[paramDataForTagByRun.runparams]]</div>
-    <template is="dom-repeat" items="[[paramDataForTagByRun.payload]]">
-      <div>[[item]]</div>
+    <template is="dom-repeat" items="[[parameters]]" as="param">
+      <tf-line-chart-data-loader
+        active="[[active]]"
+        color-scale="[[_getColorScale(multiExperiments, colorScale)]]"
+        data-series="[[_getDataSeries(multiExperiments, dataToLoad.*)]]"
+        data-to-load="[[dataToLoad[param]]]"
+        get-data-load-name="[[_getDataLoadName]]"
+        get-data-load-url="[[getDataLoadUrl]]"
+        request-data="[[requestData]]"
+        ignore-y-outliers="[[ignoreYOutliers]]"
+        load-data-callback="[[_loadDataCallback]]"
+        load-key="[[tag]]"
+      > 
+      </tf-line-chart-data-loader>
     </template>
     <style>
       :host {
@@ -51,23 +62,42 @@ limitations under the License.
     </style>
   </template>
   <script>
-    "use strict";
+    "use strict" ;
 
     Polymer({
       is: "paramplot-card",
       properties: {
-        run: String,
         tag: String,
         paramDataForTagByRun: Object,
-
+        parameters: Array,
+        active: Boolean,
+        ignoreYOutliers: Boolean,
+        // A function called to fetch the scalars data from the backend.
+        // Should receive a {tag, run, experiment} object and return
+        // a promise resolving with the fetched scalars. The default
+        // implementation of this function executes:
+        // this.requestManager.request(this.getDataLoadUrl({tag, run, experiment}))
+        requestData: Function,
+        _loadDataCallback: {
+          type: Object,
+          value: function() {
+            return (scalarChart, metadatum, data) => {
+              const formattedData = data.map(datum => ({
+                wall_time: new Date(datum[0] * 1000),
+                step: datum[1],
+                scalar: datum[2],
+              }));
+              const name = this._getSeriesNameFromDatum(metadatum);
+              scalarChart.setSeriesMetadata(name, metadatum);
+              scalarChart.setSeriesData(name, formattedData);
+            };
+          },
+          readOnly: true,
+        },
         /** @type {Function} */
         _colorScaleFunction: {
           type: Object,  // function: string => string
           value: () => tf_color_scale.runsColorScale,
-        },
-        _runColor: {
-          type: String,
-          computed: "_computeRunColor(run)",
         },
         requestManager: Object,
         _canceller: {
@@ -75,12 +105,20 @@ limitations under the License.
           value: () => new tf_backend.Canceller(),
         },
       },
-
-      observers: ["_fetchNewData(tag)"],
-
-      _computeRunColor(run) {
-        return this._colorScaleFunction(run);
-      },
+      getDataLoadUrl: {
+          type: Function,
+          value: function() {
+            return ({tag, parameter}) => {
+              return tf_backend.getRouter().pluginRoute(
+                  'paramdatabytag',
+                  '/paramdatabytag',
+                  new URLSearchParams({
+                    tag,
+                    parameter,
+                  }));
+            }
+          },
+        },
       attached() {
         // Defer reloading until after we're attached, because that ensures that
         // the requestManager has been set from above. (Polymer is tricky
@@ -89,21 +127,26 @@ limitations under the License.
         this.reload();
       },
       reload() {
-        this._fetchNewData(this.tag);
+        this._fetchParameters();
+        this.$$('tf-line-chart-data-loader').reload();
       },
-      _fetchNewData(tag) {
+      redraw() {
+        this.$$('tf-line-chart-data-loader').redraw();
+      },
+      _fetchParameters() {
         if (!this._attached) {
           return;
         }
         this._canceller.cancelAll();
-        const url = tf_backend.addParams(
-          tf_backend.getRouter().pluginRoute('paramplot', '/paramdatabytag'), {tag});
+        const url = tf_backend.addParams(tf_backend.getRouter().pluginRoute('paramplot', '/paramaters'));
         const updateData = this._canceller.cancellable(result => {
           if (result.cancelled) {
             return;
           }
           const backendData = result.value;
-          this.paramDataForTagByRun = backendData;
+          this.parameters = backendData;
+          console.log("printing the parameters which were returned by the plugin (stored in the run parameters config file)")
+          console.log(this.parameters)
         });
         this.requestManager.request(url).then(updateData);
       },

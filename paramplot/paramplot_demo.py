@@ -25,7 +25,7 @@ import tensorflow as tf
 import paramplot_summary
 
 # Directory into which to write tensorboard data.
-LOGDIR = '../paramplotdemo'
+LOGDIR = '/tmp/paramplotdemo'
 
 def run(logdir, run_name, tag_value_map):
   """Greet several characters from a given cartoon."""
@@ -33,7 +33,7 @@ def run(logdir, run_name, tag_value_map):
   tf.reset_default_graph()
 
   placeholders = {tag: tf.placeholder(tf.float32) for tag in tag_value_map}
-  summary_ops = {tag: paramplot_summary.op("final_loss", placeholders[tag]) for tag in tag_value_map}
+  summary_ops = {tag: paramplot_summary.op(tag, placeholders[tag]) for tag in tag_value_map}
 
   writer = tf.summary.FileWriter(os.path.join(logdir, run_name))
 
