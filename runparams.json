@@ -1,0 +1,17 @@
+{
+    "run1":{
+        "num_layers": 2
+    },
+    "run2":{
+        "num_layers": 4
+    },
+    "run3":{
+        "num_layers": 8
+    },
+    "run4":{
+        "num_layers": 16
+    },
+    "run5":{
+        "num_layers": 32
+    }
+}
