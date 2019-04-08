@@ -23,11 +23,10 @@ from tensorboard import default
 from tensorboard import program
 import tensorflow as tf
 
-from paramplot_plugin import paramplot_plugin
-
+from paramplot import paramplot_loader
 
 if __name__ == '__main__':
-  plugins = default.get_plugins() + [paramplot_plugin.ParamPlotPlugin]
+  plugins = default.get_plugins() + [paramplot_loader.ParamPlotLoader()]
   assets = os.path.join(tf.resource_loader.get_data_files_path(), 'assets.zip')
   tensorboard = program.TensorBoard(plugins, lambda: open(assets, 'rb'))
   tensorboard.configure(sys.argv)

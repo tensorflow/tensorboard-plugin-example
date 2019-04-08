@@ -19,6 +19,16 @@ load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "tf_web_library")
 licenses(["notice"])  # Apache 2.0
 
 py_library(
+    name = "paramplot_loader",
+    srcs = ["paramplot_loader.py"],
+    srcs_version = "PY2AND3",
+    deps = [
+        ":paramplot_plugin",
+        "@org_tensorflow_tensorboard//tensorboard/plugins:base_plugin",
+    ],
+)
+
+py_library(
     name = "paramplot_plugin",
     srcs = ["paramplot_plugin.py"],
     srcs_version = "PY2AND3",
@@ -50,7 +60,7 @@ tf_web_library(
         "paramplot-card.html",
         "paramplot-dashboard.html",
     ],
-    path = "/paramplot-plugin",
+    path = "/paramplot",
     deps = [
         "@org_polymer_iron_icon",
         "@org_polymer_paper_icon_button",

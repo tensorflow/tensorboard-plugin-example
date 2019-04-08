@@ -4,3 +4,4 @@ ranjeevmenv
 *.pyc
 *.egg-info/
 .vscode
+paramplotdemo
