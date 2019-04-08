@@ -58,14 +58,6 @@ limitations under the License.
           </div>
         </template>
         <template is="dom-if" if="[[!_dataNotFound]]">
-          <paper-input
-            no-label-float
-            label="Filter tags (regular expressions supported)"
-            value="{{_tagFilter}}"
-            class="search-input"
-          >
-            <iron-icon prefix icon="search"></iron-icon>
-          </paper-input>
           <template is="dom-repeat" items="[[_categories]]" as="category">
             <tf-category-pane category="[[category]]">
               <tf-paginated-view
@@ -77,7 +69,6 @@ limitations under the License.
                     <div class="layout horizontal wrap">
                       <template is="dom-repeat" items="[[page.items]]">
                         <paramplot-card
-                          run="[[item.run]]"
                           tag="[[item.tag]]"
                           request-manager="[[_requestManager]]"
                           ></paramplot-card>
@@ -117,7 +108,7 @@ limitations under the License.
         _categories: {
           type: Array,
           computed:
-            '_makeCategories(_runToTag, _selectedRuns, _tagFilter)',
+            '_makeCategories(_runToTag, _selectedRuns)',
         },
         _requestManager: {
           type: Object,
@@ -149,8 +140,8 @@ limitations under the License.
           g.reload();
         });
       },
-      _makeCategories(runToTag, selectedRuns, tagFilter) {
-        return tf_categorization_utils.categorizeRunTagCombinations(runToTag, selectedRuns, tagFilter);
+      _makeCategories(runToTag, selectedRuns) {
+        return tf_categorization_utils.categorizeTags(runToTag, selectedRuns);
       },
     });
 

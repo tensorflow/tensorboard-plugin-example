@@ -46,11 +46,12 @@ class ParamPlotPlugin(base_plugin.TBPlugin):
 
     # Read in the runparams.json file
     runparams_path = self._context.flags.runParamsPath
+    print(f"Opening file with full filepath {runparams_path}")
     with open(runparams_path, 'r') as read_file:
-      self._runparams_json = json.load(read_file.read())
+      self._runparams_json = json.load(read_file)
 
   def _get_valid_runs(self):
-    return [run.run_name for run in self._multiplexer.Runs() if run.run_name in self._runparams_json]
+    return [run for run in self._multiplexer.Runs() if run in self._runparams_json]
 
   @wrappers.Request.application
   def tags_route(self, request):
@@ -88,8 +89,8 @@ class ParamPlotPlugin(base_plugin.TBPlugin):
     # @wrappers.Request.application.
     return {
         '/tags': self.tags_route,
-        '/rundata': self._runparams_route,
         '/paramdatabytag': self._paramdatabytag_route,
+        '/parameters': self._parameters_route,
     }
 
   def is_active(self):
@@ -105,77 +106,43 @@ class ParamPlotPlugin(base_plugin.TBPlugin):
 
     # The plugin is active if there are any runs in the runparam dictionary which are in the logdir
     return bool(any(self._get_valid_runs()))
-
-  def _process_tensor_event(self, event):
-    """Convert a TensorEvent into a JSON-compatible response."""
-    data_arr = tf.make_ndarray(event.tensor_proto)
-    return {
-        'wall_time': event.wall_time,
-        'step': event.step,
-        'data': data_arr,
-    }
   
-  def _get_tensor_events_payload(self, run, tag):
-    # We fetch all the tensor events that contain greetings.
-    tensor_events = self._multiplexer.Tensors(run, tag)
+  def _get_tensor_events_payload(self, parameter, tag):
+    processed_events = []
+    # Loop through all the runs and compute the data which has parameter value as the independent variable and tensors as the dependent value
+    for run in self._get_valid_runs():
+      tensor_events = self._multiplexer.Tensors(run, tag)
+      param_value = self._runparams_json[run][parameter]
+      processed_events = processed_events + [(ev.wall_time, param_value, tf.make_ndarray(ev.tensor_proto).item()) for ev in tensor_events] 
+    return processed_events
 
-    # Convert the tensor data to an nd array for processing on the frontend.
-    return [self._process_tensor_event(ev) for ev in tensor_events]
-  
   @wrappers.Request.application
-  def _runparams_route(self, request):
+  def _paramdatabytag_route(self, request):
     """A route which returns the runparams for a particular run along with the tag specific data
 
     Returns:
       A JSON object of the form:
-      {
-        runparams: ...,
-        payload: [Events]
-      }
+      [(wall_time, parameter_value, tag)] for each run
     """
 
-    run = request.args.get('run')
+    parameter = request.args.get('parameter')
     tag = request.args.get('tag')
 
-    response = {
-      "runparams": self._runparams_json[run],
-      "payload": self._get_tensor_events_payload(run, tag)
-    }
+    response = self._get_tensor_events_payload(parameter, tag)
 
     return http_util.Respond(request, response, 'application/json')
-  
+
   @wrappers.Request.application
-  def _paramdatabytag_route(self, request):
-    """A route which for a given tag will return all the run data for that tag (for all runs which are labelled in the runparams file)
-    as well as the parameter values associated with the given run
+  def _parameters_route(self, request):
+    """A route which returns the list of paramaters which each run is tagged with in the run parameters json file
 
-    Returns:
-      A JSON object as the http response which will be of the form:
-      {
-        "run1": {
-          payload: [Events...],
-          paramaters: {
-            num_layers: 3, 
-            ...
-          }
-        },
-        "run2": ...
-      } 
+    Returns: A JSON object which is an array of parameter names (it is an assumption of the runparams schema all 
+    runs will be tagged with the same parameters)
     """
-    tag = request.args.get('tag')
 
-    # Fetch all the runs which are in the runparams file and get the intersection of those with the runs in the logdir
-    valid_runs = self._get_valid_runs()
-
-    response = {
-      run: {
-        "payload": self._get_tensor_events_payload(run, tag),
-        "parameters": self._runparams_json[run]
-      } for run in valid_runs
-    }
+    response = list(next(iter(self._runparams_json.values())).keys())
 
     return http_util.Respond(request, response, 'application/json')
-
 
     
 
