@@ -70,6 +70,7 @@ limitations under the License.
                       <template is="dom-repeat" items="[[page.items]]">
                         <paramplot-card
                           tag="[[item.tag]]"
+                          data-to-load="[[item.series]]"
                           request-manager="[[_requestManager]]"
                           ></paramplot-card>
                       </template>
@@ -101,10 +102,6 @@ limitations under the License.
         _selectedRuns: Array,
         _runToTag: Object,  // map<run: string, tags: string[]>
         _dataNotFound: Boolean,
-        _tagFilter: {
-          type: String,  // upward bound from paper-input
-          value: '.*',
-        },
         _categories: {
           type: Array,
           computed:
@@ -141,7 +138,14 @@ limitations under the License.
         });
       },
       _makeCategories(runToTag, selectedRuns) {
-        return tf_categorization_utils.categorizeTags(runToTag, selectedRuns);
+        var categories =  tf_categorization_utils.categorizeTags(runToTag, selectedRuns);
+        categories.forEach(category => {
+            category.items = category.items.map(item => ({
+              tag: item.tag,
+              series: item.runs.map(run => ({run, tag: item.tag})),
+            }));
+        });
+        return categories;
       },
     });
 

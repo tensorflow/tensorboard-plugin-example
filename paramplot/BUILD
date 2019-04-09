@@ -75,5 +75,6 @@ tf_web_library(
         "@org_tensorflow_tensorboard//tensorboard/components/tf_paginated_view",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_runs_selector",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_tensorboard:registry",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_line_chart_data_loader",
     ],
 )

@@ -140,8 +140,9 @@ class ParamPlotPlugin(base_plugin.TBPlugin):
     runs will be tagged with the same parameters)
     """
 
-    response = list(next(iter(self._runparams_json.values())).keys())
-
+    response = {
+      "payload": list(next(iter(self._runparams_json.values())).keys())
+    }
     return http_util.Respond(request, response, 'application/json')
 
     
