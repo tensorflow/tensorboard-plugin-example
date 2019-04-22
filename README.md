@@ -18,8 +18,8 @@ To test out the custom “greeter TensorBoard” with the Greeter Plugin, first 
 Then, clone and `cd` into this repository, and run the following commands:
 
 ```sh
-bazel run //greeter_plugin:greeter_demo
-bazel run //greeter_tensorboard -- --logdir=/tmp/greeter_demo
+bazel run //greeter_plugin:greeter_demo --incompatible_remove_native_http_archive=false
+bazel run //greeter_tensorboard --incompatible_remove_native_http_archive=false -- --logdir=/tmp/greeter_demo
 ```
 
 [install Bazel]: https://bazel.build/versions/master/docs/install.html
